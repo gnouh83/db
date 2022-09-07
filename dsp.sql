@@ -21,7 +21,7 @@ GROUP BY b.card_name, c.price
 ORDER BY b.card_name
 ;
 --The da nap
-SELECT b.card_name, SUM(b.amount) AS amount, c.price, a.res_order_id
+SELECT b.card_name, SUM(b.amount) AS amount, c.price, c.cap_max, a.res_order_id
 FROM dsp_transaction a,
      dsp_dc_detail b,
      dsp_service_price c
@@ -30,11 +30,18 @@ WHERE a.transaction_id = b.transaction_id
   AND a.request_time >= TO_DATE('16/01/2022', 'dd/mm/yyyy')
   AND a.request_time <= TO_DATE('30/04/2022', 'dd/mm/yyyy')
   AND a.status IN (3, 6)
-GROUP BY b.card_name, c.price, a.res_order_id
+GROUP BY b.card_name, c.price, c.cap_max, a.res_order_id
 ORDER BY b.card_name
 ;
 --The da mua theo dai ly
-SELECT d.com_name, b.card_name, SUM(b.amount) AS amount, c.price, SUM(b.amount) * c.price AS total
+create table temp_comp_20220906 as
+SELECT d.com_name,
+       b.card_name,
+       SUM(b.amount)           AS amount,
+       c.price,
+       c.cap_max,
+       SUM(b.amount) * c.price AS total,
+       a.res_order_id
 FROM dsp_transaction a,
      dsp_dc_detail b,
      dsp_service_price c,
@@ -45,8 +52,8 @@ WHERE a.transaction_id = b.transaction_id
   AND a.request_time >= TO_DATE('16/01/2022', 'dd/mm/yyyy')
   AND a.request_time <= TO_DATE('30/04/2022', 'dd/mm/yyyy')
   AND a.status IN (3, 6)
-GROUP BY d.com_name, b.card_name, c.price
-ORDER BY d.com_name,b.card_name
+GROUP BY d.com_name, b.card_name, c.price, c.cap_max, a.res_order_id
+ORDER BY d.com_name, b.card_name
 ;
 SELECT *
 FROM dsp_transaction;
@@ -97,7 +104,12 @@ WHERE status = '0'
   AND NVL(retries, 3) > 0;
 
 
-select * from DSP_ORDER_POLICY_TAB;
+SELECT *
+FROM dsp_order_policy_tab;
 
-UPDATE DSP_ORDER_POLICY_TAB SET CUST_TYPE = '0' WHERE DEF = 1;
-COMMIT ;
+UPDATE dsp_order_policy_tab
+SET cust_type = '0'
+WHERE def = 1;
+COMMIT;
+
+select * from temp_comp_20220906;
