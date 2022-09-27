@@ -35,8 +35,7 @@ SELECT SUM(a.cap_max) amount, SUM(b.amount * a.price) AS total
 FROM temp_20220905 a,
      temp_dc_use_20220905 b
 WHERE a.res_order_id = b.order_code
-  AND a.card_name = b.profile_code
-;
+  AND a.card_name = b.profile_code;
 
 SELECT a.com_name,SUM(a.cap_max) amount, SUM(b.amount * a.price) AS total
 FROM temp_comp_20220906 a,
@@ -45,3 +44,8 @@ WHERE a.res_order_id = b.order_code
   AND a.card_name = b.profile_code
 group by a.com_name
 ;
+
+select * from DSP_MT_HISTORY where SENT_TIME >=trunc(sysdate) and ISDN='901266888';
+
+
+select REQUEST,RESPONSE from DSP_SYS_LOG where ISDN='899507964' and EXEC_DATETIME>=trunc(sysdate-1) order by LOG_ID;
