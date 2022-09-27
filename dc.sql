@@ -48,4 +48,8 @@ group by a.com_name
 select * from DSP_MT_HISTORY where SENT_TIME >=trunc(sysdate) and ISDN='901266888';
 
 
-select REQUEST,RESPONSE from DSP_SYS_LOG where ISDN='899507964' and EXEC_DATETIME>=trunc(sysdate-1) order by LOG_ID;
+select REQUEST,RESPONSE from DSP_SYS_LOG where ISDN='899507964' and EXEC_DATETIME>=trunc(sysdate) order by LOG_ID;
+select * from DSP_MO_HISTORY where ISDN='899507964' and RECEIVED_TIME>=trunc(sysdate-1);
+select * from DSP_MT_HISTORY where ISDN ='84899507964' and SENT_TIME>=trunc(sysdate-1);
+select * from DSP_MT_QUEUE where ISDN='899507964' and SENT_TIME>=trunc(sysdate-1);
+select * from DSP_MT_HISTORY where REQUEST_ID='4272494';
