@@ -9,10 +9,22 @@ select * from API_REQUEST where REQUEST_TIME>=trunc(sysdate) and TRANS_ID IN (
     );
 
 SELECT *
-FROM temp_20220905;
+FROM VOUCHER_ORDER where ORDER_CODE='qiZIkAUukx8GR6vxgH3fBn73gyE=';
 
 SELECT *
 FROM temp_dc_use_20220905;
+
+
+select * from EMAIL_HISTORY where ORDER_ID=1000003239;
+select * from EMAIL_QUEUE;
+
+
+--
+select * from job where p1  ='3201';--email id (email_queue)
+--Cập nhật lại trạng thái job bị lỗi (id job lấy trên log tiến trình gửi email)
+select * from job where JOB_ID in (11167,11169,11173,11171,11175);
+update job set status = 0 where job_id in (11155);
+COMMIT ;
 
 /*CREATE TABLE temp_dc_use_20220905 AS*/
 SELECT a.profile_code, COUNT(1) amount, b.order_code
