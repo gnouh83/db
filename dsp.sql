@@ -3,10 +3,11 @@ FROM dsp_company;
 SELECT *
 FROM dsp_sms_command
 ORDER BY cmd_id;
+
 SELECT *
 FROM dsp_sys_log
-WHERE exec_datetime > TO_DATE('09/10/2022', 'dd/mm/yyyy')
-  AND ISDN = '937122801'
+WHERE exec_datetime >=TO_DATE('09/11/2022', 'dd/mm/yyyy')
+  AND ISDN = '763690622'
 ORDER BY log_id;
 --The da mua
 SELECT b.card_name, SUM(b.amount) AS amount, c.price, SUM(b.amount) * c.price AS total
@@ -402,9 +403,10 @@ and REQUEST like 'UseDCReqObj%' and STATUS='0';
 
 select * from DSP_TRANSACTION where TRANSACTION_ID=2449;
 
-Select COLUMN_NAME,DATA_TYPE||'('||decode(DATA_TYPE,'NUMBER',DATA_PRECISION,DATA_LENGTH) ||')' DATA_LENGTH,decode(NULLABLE,'N','Y','N') mandatory from USER_TAB_COLUMNS where TABLE_NAME='DSP_TRANSACTION';
+Select TABLE_NAME,COLUMN_NAME,DATA_TYPE||'('||decode(DATA_TYPE,'NUMBER',DATA_PRECISION,DATA_LENGTH) ||')' DATA_LENGTH,decode(NULLABLE,'N','Y','N') mandatory
+from USER_TAB_COLUMNS where TABLE_NAME like 'DIP_REQUEST_HIST%';
 
-SELECT * from USER_TAB_COLUMNS where TABLE_NAME='API_USER';
+SELECT * from USER_TAB_COLUMNS where TABLE_NAME='2.7.2.21	DIP_REQUEST_HIST_QUEUE';
 select * from USER_CONSTRAINTS a,USER_CONS_COLUMNS b where a.TABLE_NAME='DSP_TRANSACTION' and a.CONSTRAINT_TYPE<>'C'
 and a.CONSTRAINT_NAME=b.CONSTRAINT_NAME;
 
@@ -413,3 +415,16 @@ select * from USER_TAB_COLUMNS;
 SELECT * from DSP_COM_ORDER_POL;
 
 select * from DSP_TRANSACTION where TRANSACTION_ID=2480;
+
+select * from DSP_MO_QUEUE_20220627;
+select * from USER_TABLES ORDER BY TABLE_NAME;
+
+select * from DSP_MO_HISTORY where RECEIVED_TIME>=trunc(sysdate-3) and CONTENT='DK DC N49724941953902';
+select * from DSP_MT_HISTORY where ISDN='84765519351' and SENT_TIME >=trunc(sysdate-3);
+
+select * from DSP_SYS_LOG where REQUEST like '%%';
+
+--UseDCResObj{transaction_id='10207', code='0', description='null', serial='230000000004746', transaction_id='10207', dat_amt=0, dat_day=180, order_code='mAUBRea2e35g390EYAclsmNffzU=', reseller='100000000241', profile_code='6MA30'}
+
+
+select * from DSP_ORDER_TRANSACTION;
