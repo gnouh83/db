@@ -6,7 +6,7 @@ ORDER BY cmd_id;
 
 SELECT *
 FROM dsp_sys_log
-WHERE exec_datetime >=TO_DATE('09/11/2022', 'dd/mm/yyyy')
+WHERE exec_datetime >= TO_DATE('09/11/2022', 'dd/mm/yyyy')
   AND ISDN = '763690622'
 ORDER BY log_id;
 --The da mua
@@ -84,7 +84,7 @@ WHERE sent_time > TO_DATE('06/09/2022 12:17:00', 'dd/mm/yyyy hh24:mi:ss');
 
 SELECT *
 FROM dsp_mo_history
-WHERE received_time > TO_DATE('06/09/2022 12:15:00', 'dd/mm/yyyy hh24:mi:ss');
+WHERE received_time > TRUNC(SYSDATE);
 
 SELECT *
 FROM dsp_cps_queue;
@@ -331,13 +331,15 @@ WHERE o.order_id = ol.order_id(+)
   AND o.expire_time >= TO_DATE('09/04/2022', 'dd/mm/yyyy');
 
 
-create table RPT_ORDER_SUMMARY_DAILY_BAK as
+CREATE TABLE RPT_ORDER_SUMMARY_DAILY_BAK AS
 SELECT *
 FROM RPT_ORDER_SUMMARY_DAILY
 ORDER BY SUM_DATE;
 
 
-SELECT * from RPT_ORDER_SUMMARY_DAILY where REMAIN_VALUE<0;
+SELECT *
+FROM RPT_ORDER_SUMMARY_DAILY
+WHERE REMAIN_VALUE < 0;
 
 
 DECLARE
@@ -389,42 +391,189 @@ SELECT *
 FROM DSP_DD_HISTORY
 WHERE TRANSACTION_ID = '1520';
 
-select 87110-6445 from DUAL;
+SELECT 87110 - 6445
+FROM DUAL;
 
 
-select * from DSP_LOCK where type ='1' and LOCKED_OBJECT='ct2_mpl_api';
+SELECT *
+FROM DSP_LOCK
+WHERE type = '1'
+  AND LOCKED_OBJECT = 'ct2_mpl_api';
 
-DELETE DSP_LOCK where LOCKED_OBJECT='ct2_mpl_api' and ISSUE_DATE=trunc(sysdate);
-COMMIT ;
+DELETE DSP_LOCK
+WHERE LOCKED_OBJECT = 'ct2_mpl_api'
+  AND ISSUE_DATE = TRUNC(SYSDATE);
+COMMIT;
 
-select * from DSP_SYS_LOG where EXEC_DATETIME>=trunc(sysdate) and TRANS_ID like 'ct2_mpl_api%'
-and REQUEST like 'UseDCReqObj%' and STATUS='0';
+SELECT *
+FROM DSP_SYS_LOG
+WHERE EXEC_DATETIME >= TRUNC(SYSDATE)
+  AND TRANS_ID LIKE 'ct2_mpl_api%'
+  AND REQUEST LIKE 'UseDCReqObj%'
+  AND STATUS = '0';
 --and REQUEST like '%020000007108057%';
 
-select * from DSP_TRANSACTION where TRANSACTION_ID=2449;
+SELECT *
+FROM DSP_TRANSACTION
+WHERE TRANSACTION_ID = 2449;
 
-Select TABLE_NAME,COLUMN_NAME,DATA_TYPE||'('||decode(DATA_TYPE,'NUMBER',DATA_PRECISION,DATA_LENGTH) ||')' DATA_LENGTH,decode(NULLABLE,'N','Y','N') mandatory
-from USER_TAB_COLUMNS where TABLE_NAME like 'DIP_REQUEST_HIST%';
+SELECT TABLE_NAME,
+       COLUMN_NAME,
+       DATA_TYPE || '(' || DECODE(DATA_TYPE, 'NUMBER', DATA_PRECISION, DATA_LENGTH) || ')' DATA_LENGTH,
+       DECODE(NULLABLE, 'N', 'Y', 'N')                                                     mandatory
+FROM USER_TAB_COLUMNS
+WHERE TABLE_NAME LIKE 'DIP_REQUEST_HIST%';
 
-SELECT * from USER_TAB_COLUMNS where TABLE_NAME='2.7.2.21	DIP_REQUEST_HIST_QUEUE';
-select * from USER_CONSTRAINTS a,USER_CONS_COLUMNS b where a.TABLE_NAME='DSP_TRANSACTION' and a.CONSTRAINT_TYPE<>'C'
-and a.CONSTRAINT_NAME=b.CONSTRAINT_NAME;
+SELECT *
+FROM USER_TAB_COLUMNS
+WHERE TABLE_NAME = '2.7.2.21	DIP_REQUEST_HIST_QUEUE';
+SELECT *
+FROM USER_CONSTRAINTS a,
+     USER_CONS_COLUMNS b
+WHERE a.TABLE_NAME = 'DSP_TRANSACTION'
+  AND a.CONSTRAINT_TYPE <> 'C'
+  AND a.CONSTRAINT_NAME = b.CONSTRAINT_NAME;
 
-select * from DSP_SYS_LOG;
-select * from USER_TAB_COLUMNS;
-SELECT * from DSP_COM_ORDER_POL;
+SELECT *
+FROM DSP_SYS_LOG;
+SELECT *
+FROM USER_TAB_COLUMNS;
+SELECT *
+FROM DSP_COM_ORDER_POL;
 
-select * from DSP_TRANSACTION where TRANSACTION_ID=2480;
+SELECT *
+FROM DSP_TRANSACTION
+WHERE TRANSACTION_ID = 2480;
 
-select * from DSP_MO_QUEUE_20220627;
-select * from USER_TABLES ORDER BY TABLE_NAME;
+SELECT *
+FROM DSP_MO_QUEUE_20220627;
+SELECT *
+FROM USER_TABLES
+ORDER BY TABLE_NAME;
 
-select * from DSP_MO_HISTORY where RECEIVED_TIME>=trunc(sysdate-3) and CONTENT='DK DC N49724941953902';
-select * from DSP_MT_HISTORY where ISDN='84765519351' and SENT_TIME >=trunc(sysdate-3);
+SELECT *
+FROM DSP_MO_HISTORY
+WHERE RECEIVED_TIME >= TRUNC(SYSDATE - 3)
+  AND CONTENT = 'DK DC N49724941953902';
+SELECT *
+FROM DSP_MT_HISTORY
+WHERE ISDN = '84765519351'
+  AND SENT_TIME >= TRUNC(SYSDATE - 3);
 
-select * from DSP_SYS_LOG where REQUEST like '%%';
+SELECT *
+FROM DSP_SYS_LOG
+WHERE REQUEST LIKE '%%';
 
 --UseDCResObj{transaction_id='10207', code='0', description='null', serial='230000000004746', transaction_id='10207', dat_amt=0, dat_day=180, order_code='mAUBRea2e35g390EYAclsmNffzU=', reseller='100000000241', profile_code='6MA30'}
 
 
-select * from DSP_ORDER_TRANSACTION;
+SELECT *
+FROM DSP_ORDER_TRANSACTION;
+SELECT *
+FROM dip_sub_service
+WHERE isdn = '918861983'
+ORDER BY END_TIME DESC;
+--931040211;
+
+SELECT *
+FROM DSP_MO_QUEUE;
+SELECT *
+FROM DSP_MO_HISTORY
+ORDER BY RECEIVED_TIME DESC;
+INSERT INTO DSP_MO_QUEUE
+VALUES (1, '918861983', '', 'KT IP', SYSDATE, '9034', '3');
+COMMIT;
+
+SELECT DISTINCT a.package_id,
+                a.service_id,
+                TO_CHAR(a.start_time, 'dd/MM/yyyy HH24:mi:ss') AS start_time,
+                b.channel,
+                b.user_id,
+                TO_CHAR(a.end_time, 'dd/MM/yyyy HH24:mi:ss')   AS end_time,
+                a.initial_amount,
+                a.active_day
+FROM dip_sub_service a,
+     dip_request_hist b,
+     dip_package c
+WHERE a.package_id = c.package_id
+  AND b.package_code = c.package_code
+  AND a.isdn = '918861983'
+  AND a.end_time > SYSDATE
+  AND a.isdn = b.isdn
+  AND b.status = 1;
+
+SELECT *
+FROM dip_request_hist
+WHERE isdn = '918861983';
+SELECT *
+FROM dip_package;
+SELECT *
+FROM DSP_MT_QUEUE
+ORDER BY PROCESS_TIME DESC;
+
+SELECT *
+FROM DIG_SUB_SERVICE;
+
+INSERT INTO DSP_OWNER.DSP_MO_QUEUE
+VALUES (112, '918861983', NULL, 'EDU M01667289556902', SYSDATE, '9034', 3);
+COMMIT;
+
+SELECT LISTAGG(b.order_id, ';') WITHIN GROUP (ORDER BY b.order_id) store_id
+FROM dsp_transaction a,
+     dsp_order_transaction b
+WHERE a.transaction_id = b.transaction_id
+  AND a.res_order_id = 'ruTsQGKTOcsOhKk6Phg7/er6KSo=';
+
+
+SELECT *
+FROM DSP_TRANSACTION
+WHERE TRANSACTION_ID IN (SELECT TRANSACTION_ID FROM DSP_ORDER_TRANSACTION GROUP BY TRANSACTION_ID HAVING COUNT(1) > 1)
+  AND RES_ORDER_ID IS NOT NULL;
+
+SELECT *
+FROM DSP_ORDER_TRANSACTION
+WHERE TRANSACTION_ID = 1293;
+
+SELECT *
+FROM DSP_TRANSACTION
+WHERE RES_ORDER_ID = 'ruTsQGKTOcsOhKk6Phg7/er6KSo=';
+
+SELECT * from API_REQUEST ORDER BY REQ_TIME desc;
+
+
+SELECT u.user_id, u.user_name,u.password,u.expire_status,u.modified_password, c.api_public_key
+FROM am_user u, am_group_user ug, am_group g, dsp_company c
+WHERE     u.user_id = ug.user_id
+  AND ug.GROUP_ID = g.GROUP_ID
+  AND u.user_id = c.api_user_id
+  AND c.api_public_key IS NOT NULL
+  AND g.GROUP_ID IN (SELECT par_value FROM ap_param
+                     WHERE par_name = 'API_GROUP_ID' AND par_type = 'SYSTEM')
+  AND NVL (g.status, 1) > 0
+  AND NVL (u.status, 1) > 0 order by u.USER_NAME;
+
+select * from DSP_COMPANY where COM_ID=621;
+SELECT * from DIP_REQUEST_HIST ORDER BY REQUEST_TIME desc;
+
+select * from DSP_DD_HISTORY;
+
+select * from DSP_SMS_COMMAND where CMD_CODE='CMD_DK_DIP_OK';
+alter TABLE  DIP_REQUEST_HIST ADD ORDER_ID       NUMBER(15) ;
+select * from dip_sub_service;
+
+
+SELECT MAX((100 - ROUND((NVL(b.bytes_free, 0) / a.bytes_alloc) * 100, 2)))
+FROM (SELECT f.tablespace_name,
+             SUM(f.bytes)                                                    bytes_alloc,
+             SUM(DECODE(f.autoextensible, 'YES', f.maxbytes, 'NO', f.bytes)) maxbytes,
+             COUNT(1)                                                        datafiles
+      FROM dba_data_files f
+      GROUP BY tablespace_name) a,
+     (SELECT f.tablespace_name,
+             SUM(f.bytes) bytes_free
+      FROM dba_free_space f
+      GROUP BY tablespace_name) b
+WHERE a.tablespace_name = b.tablespace_name(+)
+  AND a.tablespace_name = 'DATA';
+
+SELECT * from dba_free_space;
