@@ -47,5 +47,13 @@
       <jdbc-url>jdbc:oracle:thin:@10.3.15.65:1521:dspreport</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="INS@10.11.10.12" uuid="b1780685-1d8d-4a48-aeff-7954f77335d3">
+      <driver-ref>oracle.19</driver-ref>
+      <synchronize>true</synchronize>
+      <auto-commit>false</auto-commit>
+      <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
+      <jdbc-url>jdbc:oracle:thin:@10.11.10.12:1521:app</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

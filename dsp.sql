@@ -576,4 +576,7 @@ FROM (SELECT f.tablespace_name,
 WHERE a.tablespace_name = b.tablespace_name(+)
   AND a.tablespace_name = 'DATA';
 
-SELECT * from dba_free_space;
+SELECT * from  API_REQUEST order by REQ_ID desc;
+
+
+select * from DSP_SYS_LOG where EXEC_DATETIME>trunc(sysdate) and TRANS_ID ='vmedia_api_com_1670224040163';
