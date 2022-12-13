@@ -14,19 +14,8 @@ FROM dsp_sys_log
 WHERE exec_datetime >= TO_DATE('09/11/2022', 'dd/mm/yyyy')
   AND ISDN = '763690622'
 ORDER BY log_id;
---The da mua
-SELECT b.card_name, SUM(b.amount) AS amount, c.price, SUM(b.amount) * c.price AS total
-FROM dsp_transaction a,
-     dsp_dc_detail b,
-     dsp_service_price c
-WHERE a.transaction_id = b.transaction_id
-  AND b.price_id = c.price_id
-  AND a.request_time >= TO_DATE('16/01/2022', 'dd/mm/yyyy')
-  AND a.request_time <= TO_DATE('30/04/2022', 'dd/mm/yyyy')
-  AND a.status IN (3, 6)
-GROUP BY b.card_name, c.price
-ORDER BY b.card_name
-;
+
+
 --The da nap
 SELECT b.card_name, SUM(b.amount) AS amount, c.price, c.cap_max, a.res_order_id
 FROM dsp_transaction a,
