@@ -5,8 +5,7 @@ CREATE TABLE shop
 (
     shop_id      NUMBER(20)         NOT NULL
         CONSTRAINT shop_pk PRIMARY KEY,
-    parent_id    NUMBER(20)
-        CONSTRAINT shop_fk1 REFERENCES shop,
+    parent_id    NUMBER(20),
     shop_code    VARCHAR2(20 BYTE)  NOT NULL
         CONSTRAINT shop_uk
             UNIQUE,
@@ -42,8 +41,7 @@ CREATE TABLE company
 (
     com_id         NUMBER(20)     NOT NULL
         CONSTRAINT company_pk PRIMARY KEY,
-    parent_id      NUMBER(20)
-        CONSTRAINT comp_fk1 REFERENCES company,
+    parent_id      NUMBER(20),
     com_name       NVARCHAR2(200) NOT NULL,
     shop_id        NUMBER(20)     NOT NULL,
     tax_code       VARCHAR2(50),
