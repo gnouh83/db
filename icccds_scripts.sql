@@ -83,6 +83,3 @@ CREATE SEQUENCE company_seq
     NOORDER
     CACHE 20
 /
-
-
-select * from gv$session;
