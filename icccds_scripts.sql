@@ -82,3 +82,18 @@ CREATE SEQUENCE company_seq
     CACHE 20
 /
 
+create table shop_level
+(
+    id         number(10)    not null
+        constraint shop_level_pk
+            primary key,
+    shop_level number(1)     not null
+        constraint shop_level_uk unique,
+    name       varchar2(200) not null
+)/
+
+insert into shop_level values (1,1,'Cấp 1');
+insert into shop_level values (2,2,'Cấp 2');
+insert into shop_level values (3,3,'Cấp 3');
+insert into shop_level values (4,4,'Cấp 4');
+commit ;
