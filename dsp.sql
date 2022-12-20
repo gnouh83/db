@@ -11,8 +11,8 @@ ORDER BY log_id;
 
 SELECT *
 FROM dsp_sys_log
-WHERE exec_datetime >= TO_DATE('09/11/2022', 'dd/mm/yyyy')
-  AND ISDN = '763690622'
+WHERE exec_datetime >= TO_DATE('15/12/2022', 'dd/mm/yyyy')
+  AND ISDN = '906328167'
 ORDER BY log_id;
 
 
