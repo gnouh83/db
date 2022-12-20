@@ -82,56 +82,62 @@ CREATE SEQUENCE company_seq
     CACHE 20
 /
 
-create table shop_level
+CREATE TABLE shop_level
 (
-    id         number(10)    not null
-        constraint shop_level_pk
-            primary key,
-    shop_level number(1)     not null
-        constraint shop_level_uk unique,
-    name       varchar2(200) not null
+    id         NUMBER(10)    NOT NULL
+        CONSTRAINT shop_level_pk
+            PRIMARY KEY,
+    shop_level NUMBER(1)     NOT NULL
+        CONSTRAINT shop_level_uk UNIQUE,
+    name       VARCHAR2(200) NOT NULL
 )/
 
-insert into shop_level values (1,1,'Cấp 1');
-insert into shop_level values (2,2,'Cấp 2');
-insert into shop_level values (3,3,'Cấp 3');
-insert into shop_level values (4,4,'Cấp 4');
-commit ;
+INSERT INTO shop_level
+VALUES (1, 1, 'Cấp 1');
+INSERT INTO shop_level
+VALUES (2, 2, 'Cấp 2');
+INSERT INTO shop_level
+VALUES (3, 3, 'Cấp 3');
+INSERT INTO shop_level
+VALUES (4, 4, 'Cấp 4');
+COMMIT;
 
 
-create table SUB_SERVICE
+CREATE TABLE sub_service
 (
-    ISDN           VARCHAR2(20)          not null,
-    SERVICE        VARCHAR2(50)          not null,
-    START_TIME     DATE                  not null,
-    END_TIME       DATE                  not null,
-    INITIAL_AMOUNT NUMBER(10),
-    LAST_UPDATE    DATE,
-    GROUP_NAME     VARCHAR2(30),
-    ALERT_END_TIME VARCHAR2(1) default 0 not null,
-    PROFILE        VARCHAR2(30),
-    HID            NUMBER(15),
-    SERIAL         VARCHAR2(30),
-    TOTAL_AMOUNT   NUMBER(15),
-    OLD_CARD       VARCHAR2(2) default 0
+    isdn           VARCHAR2(20)          NOT NULL,
+    service        VARCHAR2(50)          NOT NULL,
+    start_time     DATE                  NOT NULL,
+    end_time       DATE                  NOT NULL,
+    profile_code   VARCHAR2(30),
+    initial_amount NUMBER(10),
+    total_amount   NUMBER(15),
+    serial         VARCHAR2(30),
+    alert_end_time VARCHAR2(1) DEFAULT 0 NOT NULL,
+    last_update    DATE,
+    hid            NUMBER(15),
+    request_id     VARCHAR2(100),
+    channel        VARCHAR2(1)
 )
 /
 
-comment on column DSP_OWNER.DSP_SUB_SERVICE.ALERT_END_TIME is '1: da canh bao, 0: chua canh bao'
+COMMENT ON COLUMN sub_service.alert_end_time IS '1: da canh bao, 0: chua canh bao'
+/
+COMMENT ON COLUMN sub_service.channel IS '1: SMS, 2: WEB, 3: API'
 /
 
-create index DSP_OWNER.PK_DSP_SUB_SERVICE
-    on DSP_OWNER.DSP_SUB_SERVICE (ISDN, SERVICE)
+CREATE INDEX sub_service_pk
+    ON sub_service (isdn, service)
 /
 
-create trigger DSP_OWNER.DSP_SUB_SERVICE_BU
-    before update
-    on DSP_OWNER.DSP_SUB_SERVICE
-    for each row
-begin
-    if :NEW.end_time!=:OLD.end_time and :OLD.alert_end_time='1' then
-       :NEW.alert_end_time:='0';
-    end if;
-end;
+CREATE TRIGGER sub_service_bu
+    BEFORE UPDATE
+    ON sub_service
+    FOR EACH ROW
+BEGIN
+    IF :new.end_time != :old.end_time AND :old.alert_end_time = '1' THEN
+        :new.alert_end_time := '0';
+    END IF;
+END;
 /
 
