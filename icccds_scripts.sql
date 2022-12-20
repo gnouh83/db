@@ -97,3 +97,41 @@ insert into shop_level values (2,2,'Cấp 2');
 insert into shop_level values (3,3,'Cấp 3');
 insert into shop_level values (4,4,'Cấp 4');
 commit ;
+
+
+create table SUB_SERVICE
+(
+    ISDN           VARCHAR2(20)          not null,
+    SERVICE        VARCHAR2(50)          not null,
+    START_TIME     DATE                  not null,
+    END_TIME       DATE                  not null,
+    INITIAL_AMOUNT NUMBER(10),
+    LAST_UPDATE    DATE,
+    GROUP_NAME     VARCHAR2(30),
+    ALERT_END_TIME VARCHAR2(1) default 0 not null,
+    PROFILE        VARCHAR2(30),
+    HID            NUMBER(15),
+    SERIAL         VARCHAR2(30),
+    TOTAL_AMOUNT   NUMBER(15),
+    OLD_CARD       VARCHAR2(2) default 0
+)
+/
+
+comment on column DSP_OWNER.DSP_SUB_SERVICE.ALERT_END_TIME is '1: da canh bao, 0: chua canh bao'
+/
+
+create index DSP_OWNER.PK_DSP_SUB_SERVICE
+    on DSP_OWNER.DSP_SUB_SERVICE (ISDN, SERVICE)
+/
+
+create trigger DSP_OWNER.DSP_SUB_SERVICE_BU
+    before update
+    on DSP_OWNER.DSP_SUB_SERVICE
+    for each row
+begin
+    if :NEW.end_time!=:OLD.end_time and :OLD.alert_end_time='1' then
+       :NEW.alert_end_time:='0';
+    end if;
+end;
+/
+
