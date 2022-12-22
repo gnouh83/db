@@ -205,6 +205,7 @@ CREATE TABLE mt_queue
     status       VARCHAR2(1) DEFAULT 0 NOT NULL
 )
 /
+grant select on dsp_owner.dsp_sms_command to icccds_owner;
 
 CREATE VIEW sms_command AS
 SELECT cmd_id,
