@@ -159,29 +159,32 @@ CREATE TABLE sub_service_history
     channel        VARCHAR2(1)
 )
 /
-GRANT SELECT ON DSP_SUB_SERVICE to ICCCDS_OWNER;
+GRANT SELECT ON dsp_sub_service TO icccds_owner;
 
-CREATE OR REPLACE
-FUNCTION check_sub_service (p_isdn      IN VARCHAR2,
-                                         p_service   IN VARCHAR2)
+CREATE OR REPLACE FUNCTION check_sub_service(p_isdn IN VARCHAR2,
+                                             p_service IN VARCHAR2)
     RETURN NUMBER
-IS
-    v_count   NUMBER (10) := 0;
+    IS
+    v_count NUMBER(10) := 0;
 BEGIN
-    SELECT COUNT (1)
+    SELECT COUNT(1)
     INTO v_count
     FROM dsp_owner.dsp_sub_service
-    WHERE isdn = p_isdn AND service = p_service AND end_time > SYSDATE;
+    WHERE isdn = p_isdn
+      AND service = p_service
+      AND end_time > SYSDATE;
 
     IF v_count > 0
     THEN
         RETURN v_count;
     END IF;
 
-    SELECT COUNT (1)
+    SELECT COUNT(1)
     INTO v_count
     FROM sub_service
-    WHERE isdn = p_isdn AND service = p_service AND end_time > SYSDATE;
+    WHERE isdn = p_isdn
+      AND service = p_service
+      AND end_time > SYSDATE;
 
     RETURN v_count;
 END;
@@ -202,3 +205,15 @@ CREATE TABLE mt_queue
     status       VARCHAR2(1) DEFAULT 0 NOT NULL
 )
 /
+
+CREATE VIEW sms_command AS
+SELECT cmd_id,
+       cmd_code,
+       cmd_type,
+       cmd_msg_content,
+       cmd_param_count,
+       description,
+       cmd_regex,
+       status
+FROM dsp_owner.dsp_sms_command
+WHERE sys_type = 1;
