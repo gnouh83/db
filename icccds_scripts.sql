@@ -218,3 +218,12 @@ SELECT cmd_id,
        status
 FROM dsp_owner.dsp_sms_command
 WHERE sys_type = 1;
+
+
+INSERT INTO dsp_owner.dsp_sms_command (cmd_id, cmd_code, cmd_type, cmd_msg_content, cmd_param_count, description,
+                                       cmd_regex, status, sys_type)
+VALUES (DSP_SMS_COMMAND_SEQ.nextval, 'KHCN_DK_DC_OK', 'O',
+        'Quý khách được cộng thêm {0}MB data tốc độ cao từ datacode (sử dụng tại Việt Nam), thời hạn sử dụng đến {1}.Tắt tất cả ứng dụng internet hoặc khởi động lại máy để được tính cước theo gói đã nạp. Chi tiết liên hệ 9090.',
+        0,
+        'KH nhắn tin đúng cú pháp, hiện không sử dụng gói datacode thường khác, đúng mã datacode    Quý khách được cộng thêm xMB data tốc độ cao từ datacode (sử dụng tại Việt Nam), thời hạn sử dụng đến dd/mm/yyyy. Chi tiết liên hệ 9090.    ',
+        NULL, '1', '1');
