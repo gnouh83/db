@@ -141,3 +141,37 @@ BEGIN
 END;
 /
 
+CREATE TABLE sub_service_history
+(
+    hid            NUMBER(15)            NOT NULL
+        CONSTRAINT sub_service_history_pk PRIMARY KEY,
+    isdn           VARCHAR2(20)          NOT NULL,
+    service        VARCHAR2(50)          NOT NULL,
+    start_time     DATE                  NOT NULL,
+    end_time       DATE                  NOT NULL,
+    profile_code   VARCHAR2(30),
+    initial_amount NUMBER(10),
+    total_amount   NUMBER(15),
+    serial         VARCHAR2(30),
+    alert_end_time VARCHAR2(1) DEFAULT 0 NOT NULL,
+    last_update    DATE,
+    request_id     VARCHAR2(100),
+    channel        VARCHAR2(1)
+)
+/
+
+CREATE TABLE mt_queue
+(
+    id           NUMBER(15)            NOT NULL
+        CONSTRAINT mt_queue_pk
+            PRIMARY KEY,
+    request_id   VARCHAR2(100)         NOT NULL,
+    isdn         VARCHAR2(15)          NOT NULL,
+    content      VARCHAR2(1000)        NOT NULL,
+    shortcode    VARCHAR2(15),
+    retries      NUMBER(2)             NOT NULL,
+    sent_time    TIMESTAMP(7),
+    process_time TIMESTAMP(7),
+    status       VARCHAR2(1) DEFAULT 0 NOT NULL
+)
+/
