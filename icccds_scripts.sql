@@ -159,6 +159,33 @@ CREATE TABLE sub_service_history
     channel        VARCHAR2(1)
 )
 /
+GRANT SELECT ON DSP_SUB_SERVICE to ICCCDS_OWNER;
+
+CREATE OR REPLACE
+FUNCTION check_sub_service (p_isdn      IN VARCHAR2,
+                                         p_service   IN VARCHAR2)
+    RETURN NUMBER
+IS
+    v_count   NUMBER (10) := 0;
+BEGIN
+    SELECT COUNT (1)
+    INTO v_count
+    FROM dsp_owner.dsp_sub_service
+    WHERE isdn = p_isdn AND service = p_service AND end_time > SYSDATE;
+
+    IF v_count > 0
+    THEN
+        RETURN v_count;
+    END IF;
+
+    SELECT COUNT (1)
+    INTO v_count
+    FROM sub_service
+    WHERE isdn = p_isdn AND service = p_service AND end_time > SYSDATE;
+
+    RETURN v_count;
+END;
+/
 
 CREATE TABLE mt_queue
 (
