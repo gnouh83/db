@@ -227,3 +227,21 @@ VALUES (DSP_SMS_COMMAND_SEQ.nextval, 'KHCN_DK_DC_OK', 'O',
         0,
         'KH nhắn tin đúng cú pháp, hiện không sử dụng gói datacode thường khác, đúng mã datacode    Quý khách được cộng thêm xMB data tốc độ cao từ datacode (sử dụng tại Việt Nam), thời hạn sử dụng đến dd/mm/yyyy. Chi tiết liên hệ 9090.    ',
         NULL, '1', '1');
+
+create table LOCK_OBJECT
+(
+    LOCKED_OBJECT VARCHAR2(50) not null,
+    ISSUE_DATE    DATE         not null,
+    COUNT         NUMBER(1)    not null,
+    TYPE          VARCHAR2(1)  not null,
+    constraint LOCK_OBJECT_UK
+        unique (LOCKED_OBJECT, ISSUE_DATE)
+)
+/
+
+comment on column LOCK_OBJECT.LOCKED_OBJECT is 'Khoa so thue bao (ISDN) hoac API user'
+/
+
+comment on column LOCK_OBJECT.TYPE is '0: isdn; 1: api_user'
+/
+
