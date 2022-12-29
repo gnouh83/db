@@ -218,6 +218,11 @@ VALUES (dsp_sms_command_seq.nextval, 'DK_DATA_OK', 'O',
         0,
         'KH nhắn tin đúng cú pháp, hiện không sử dụng gói datacode thường khác, đúng mã datacode    Quý khách được cộng thêm xMB data tốc độ cao từ datacode (sử dụng tại Việt Nam), thời hạn sử dụng đến dd/mm/yyyy. Chi tiết liên hệ 9090.    ',
         NULL, '1', '1');
+INSERT INTO dsp_sms_command
+VALUES (dsp_sms_command_seq.nextval, 'DK_DATA_ON_OK', 'O',
+        'Quý khách được cộng thêm {0}MB data tốc độ cao từ datacode addon (sử dụng tại Việt Nam). Tổng dung lượng còn lại từ datacode addon là {2}MB, thời hạn sử dụng đến {1}.Tắt tất cả ứng dụng internet hoặc khởi động lại máy để được tính cước theo gói đã nạp. Chi tiết liên hệ 9090.',
+        0, 'KH nhắn tin đúng cú pháp, đúng mã datacode addon', NULL, '1', '1');
+
 
 INSERT INTO dsp_sms_command
 VALUES (dsp_sms_command_seq.nextval, 'DK_DATA', 'I', NULL, 3,
@@ -265,12 +270,51 @@ VALUES (dsp_sms_command_seq.nextval, 'DK_CB_1_OK', 'O',
         'Gói DC90N đã được đăng ký thành công. Quý khách được miễn phí thoại nội mạng cho tất cả các cuộc gọi dưới 20 phút, 50 phút gọi liên mạng trong nước, 4GB data tốc độ cao/ngày. HSD gói: {0}. Từ chu kỳ thứ 2 trở đi, giá gói 90.000 đ/30 ngày. Chi tiết liên hệ 9090. Xin cảm ơn!',
         0, 'Thành công', NULL, '1', '1');
 
+INSERT INTO dsp_sms_command
+VALUES (dsp_sms_command_seq.nextval, 'KT_DATA', 'I', NULL, 2,
+        'KHCN kiem tra DATA từ DATA-CODE thông thường. Cú pháp DK_DATA', 'KT DATA', '1', '1');
+INSERT INTO dsp_sms_command
+VALUES (dsp_sms_command_seq.nextval, 'KT_DATA_ON', 'I', NULL, 2,
+        'KHCN kiem tra DATA ADDON từ DATA-CODE ADDON. Cú pháp DK_DATAON', 'KT DATAON', '1', '1');
+INSERT INTO dsp_sms_command
+VALUES (dsp_sms_command_seq.nextval, 'HUY_DATA', 'I', NULL, 2,
+        'KHCN huy DATA từ DATA-CODE thông thường. Cú pháp HUY_DATA', 'HUY DATA', '1', '1');
+INSERT INTO dsp_sms_command
+VALUES (dsp_sms_command_seq.nextval, 'HUY_DATA', 'I', NULL, 2,
+        'KHCN huy DATA từ DATA-CODE ADDON. Cú pháp HUY_DATAON', 'HUY DATAON', '1', '1');
+
+INSERT INTO dsp_sms_command
+VALUES (dsp_sms_command_seq.nextval, 'KT_DATA_OK', 'O',
+        'Quý khách còn lại {0}MB data tốc độ cao từ datacode (sử dụng tại Việt Nam), thời hạn sử dụng đến {1}. Chi tiết liên hệ 9090.    ',
+        0, 'KH nhắn tin đúng cú pháp tra cứu KT_DATA', NULL, '1', '1');
+
+INSERT INTO dsp_sms_command
+VALUES (dsp_sms_command_seq.nextval, 'KT_DATA_ON_OK', 'O',
+        'Quý khách còn lại {0}MB data tốc độ cao từ datacode addon (sử dụng tại Việt Nam), thời hạn sử dụng đến {1}. Chi tiết liên hệ 9090.',
+        0, 'KH nhắn tin đúng cú pháp tra cứu KT_DATAON', NULL, '1', '1');
+
+
+INSERT INTO dsp_sms_command
+VALUES (dsp_sms_command_seq.nextval, 'HUY_DATA_OK', 'O',
+        'Quý khách đã hủy thành công gói datacode. Chi tiết liên hệ 9090.', 0,
+        'KH nhắn tin đúng cú pháp hủy HUY_DATA', NULL, '1', '1');
+
+INSERT INTO dsp_sms_command
+VALUES (dsp_sms_command_seq.nextval, 'HUY_DATA_ON_OK', 'O',
+        'Quý khách đã hủy thành công gói datacode addon. Chi tiết liên hệ 9090.', 0,
+        'KH nhắn tin đúng cú pháp tra cứu HUY_DATAON', NULL, '1', '1');
+
+INSERT INTO dsp_sms_command
+VALUES (dsp_sms_command_seq.nextval, 'TOP_UP_OK', 'O',
+        'Quý khách đã nạp thành công gói {0}. Chi tiết liên hệ 9090.', 0,
+        'KH nhắn tin đúng cú pháp tra cứu HUY_DATAON', NULL, '1', '1');
+
 
 UPDATE dsp_sms_command
 SET sys_type ='3'
 WHERE cmd_code IN
       ('DK_FAIL_ADD_DATA', 'DK_FAIL', 'DK_FAIL_NO_RETRY', 'NO_GPRS', 'SUB_NOT_EXIST', 'LOCK_ISDN', 'VOUCHER_USED',
-       'VOUCHER_NOT_FOUND', 'INVALID_FORMAT', 'SYSTEM_ERROR');
+       'VOUCHER_NOT_FOUND', 'INVALID_FORMAT', 'SYSTEM_ERROR', 'KT_INVALID_SRV');
 
 COMMIT;
 
@@ -351,20 +395,20 @@ COMMIT;
 
 
 
-create table LOCK_OBJECT
+CREATE TABLE lock_object
 (
-    LOCKED_OBJECT VARCHAR2(50) not null,
-    ISSUE_DATE    DATE         not null,
-    COUNT         NUMBER(1)    not null,
-    TYPE          VARCHAR2(1)  not null,
-    constraint LOCK_OBJECT_UK
-        unique (LOCKED_OBJECT, ISSUE_DATE)
+    locked_object VARCHAR2(50) NOT NULL,
+    issue_date    DATE         NOT NULL,
+    count         NUMBER(1)    NOT NULL,
+    type          VARCHAR2(1)  NOT NULL,
+    CONSTRAINT lock_object_uk
+        UNIQUE (locked_object, issue_date)
 )
 /
 
-comment on column LOCK_OBJECT.LOCKED_OBJECT is 'Khoa so thue bao (ISDN) hoac API user'
+COMMENT ON COLUMN lock_object.locked_object IS 'Khoa so thue bao (ISDN) hoac API user'
 /
 
-comment on column LOCK_OBJECT.TYPE is '0: isdn; 1: api_user'
+COMMENT ON COLUMN lock_object.type IS '0: isdn; 1: api_user'
 /
 
