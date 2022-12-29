@@ -147,7 +147,6 @@ BEGIN
     END IF;
 END;
 /
-DROP  table sub_service_history;
 
 CREATE TABLE sub_service_history
 (
@@ -177,7 +176,7 @@ CREATE OR REPLACE FUNCTION check_sub_service(p_isdn IN VARCHAR2,
 BEGIN
     SELECT COUNT(1)
     INTO v_count
-    FROM dsp_sub_service
+    FROM dsp_owner.dsp_sub_service
     WHERE isdn = p_isdn
       AND service = p_service
       AND end_time > SYSDATE;
@@ -349,4 +348,23 @@ VALUES ('DATA', 'SRV_NAME', 'BDATASPONSOR1', 'Ten dich vu DATA');
 INSERT INTO ap_param
 VALUES ('DATA_ADDON', 'SRV_NAME', 'BDATASPONSOR2', 'Ten dich vu DATA_ADDON');
 COMMIT;
+
+
+
+create table LOCK_OBJECT
+(
+    LOCKED_OBJECT VARCHAR2(50) not null,
+    ISSUE_DATE    DATE         not null,
+    COUNT         NUMBER(1)    not null,
+    TYPE          VARCHAR2(1)  not null,
+    constraint LOCK_OBJECT_UK
+        unique (LOCKED_OBJECT, ISSUE_DATE)
+)
+/
+
+comment on column LOCK_OBJECT.LOCKED_OBJECT is 'Khoa so thue bao (ISDN) hoac API user'
+/
+
+comment on column LOCK_OBJECT.TYPE is '0: isdn; 1: api_user'
+/
 
