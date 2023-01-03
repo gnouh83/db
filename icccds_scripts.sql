@@ -1,5 +1,8 @@
 /*DROP TABLE shop;
 DROP TABLE company;*/
+GRANT SELECT ON dsp_sub_service TO icccds_owner;
+GRANT SELECT ON company TO dsp_owner;
+GRANT SELECT, INSERT ON mo_queue TO dsp_owner;
 
 CREATE TABLE shop
 (
@@ -35,7 +38,7 @@ CREATE SEQUENCE shop_seq
     CACHE 20
 /
 
-
+CREATE SEQUENCE company_seq MINVALUE 1000000 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1000000 CACHE 20 NOORDER NOCYCLE;
 
 CREATE TABLE company
 (
@@ -166,7 +169,7 @@ CREATE TABLE sub_service_history
     channel        VARCHAR2(1)
 )
 /
-GRANT SELECT ON dsp_sub_service TO icccds_owner;
+
 
 CREATE OR REPLACE FUNCTION check_sub_service(p_isdn IN VARCHAR2,
                                              p_service IN VARCHAR2)
@@ -412,3 +415,85 @@ COMMENT ON COLUMN lock_object.locked_object IS 'Khoa so thue bao (ISDN) hoac API
 COMMENT ON COLUMN lock_object.type IS '0: isdn; 1: api_user'
 /
 
+
+CREATE VIEW dsp_owner.v_company AS
+SELECT com_id,
+       com_name,
+       tax_code,
+       bus_code,
+       address,
+       vas_mobile,
+       representative,
+       rep_phone,
+       rep_mobile,
+       rep_position,
+       email,
+       public_key,
+       updated_key,
+       user_id,
+       parent_id,
+       status,
+       description,
+       type,
+       province,
+       city,
+       district,
+       ward,
+       file_path,
+       cps_mobile,
+       serial_prefix,
+       api_public_key,
+       api_updated_key,
+       api_user_id,
+       group_id,
+       api_group_id,
+       bhtt_code,
+       check_date,
+       bk_check_date,
+       cust_type
+FROM dsp_company
+UNION ALL
+SELECT com_id,
+       com_name,
+       tax_code,
+       bus_code,
+       address,
+       cps_mobile     vas_mobile,
+       rep_name       representative,
+       NULL           rep_phone,
+       rep_mobile,
+       rep_position,
+       email,
+       public_key,
+       public_key_upt updated_key,
+       web_user_id    user_id,
+       parent_id,
+       status,
+       description,
+       NULL           type,
+       province,
+       city,
+       district,
+       ward,
+       file_path,
+       cps_mobile,
+       NULL           serial_prefix,
+       NULL           api_public_key,
+       NULL           api_updated_key,
+       api_user_id,
+       NULL           group_id,
+       NULL           api_group_id,
+       NULL           bhtt_code,
+       NULL           check_date,
+       NULL           bk_check_date,
+       '3'            cust_type
+FROM icccds_owner.company;
+
+CREATE OR REPLACE PROCEDURE dsp_owner.forward_icccds_mo(p_request_id NUMBER, p_isdn VARCHAR2, p_content VARCHAR2,
+                                              p_shortcode VARCHAR2, p_retries NUMBER)
+    IS
+BEGIN
+    INSERT INTO icccds_owner.mo_queue VALUES (p_request_id, p_isdn, p_content, SYSDATE, p_shortcode, p_retries);
+    COMMIT;
+END;
+/
