@@ -103,5 +103,17 @@
       <jdbc-url>jdbc:oracle:thin:@10.11.10.12:1521:app</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="2022_REPORT@10.54.5.68" uuid="51d3591a-61f9-4408-8d46-5a4c018e8584">
+      <driver-ref>oracle.19</driver-ref>
+      <synchronize>true</synchronize>
+      <remarks>10.54.5.68</remarks>
+      <auto-commit>false</auto-commit>
+      <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
+      <jdbc-url>jdbc:oracle:thin:@10.54.5.68:1521:dsp</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+      <driver-properties>
+        <property name="autoCommit" value="false" />
+      </driver-properties>
+    </data-source>
   </component>
 </project>
