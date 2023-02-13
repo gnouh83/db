@@ -1,6 +1,6 @@
 SELECT Ser_num, ADDON, CRE_DAT, EXP_DAT, DAT_AMT, DAT_DAY, PROFILE_CODE
 FROM VOUCHER
-where order_id;
+where order_id=0;
 
 SELECT *
 FROM VOUCHER where enc_pin='R4TZ5maG2eUBSSLiIkjW/LT51sBQ6w3hqwdUzDD7DOQ=';
@@ -54,10 +54,10 @@ WHERE p1 = '3201';
 --Cập nhật lại trạng thái job bị lỗi (id job lấy trên log tiến trình gửi email)
 SELECT *
 FROM job
-WHERE JOB_ID IN (11167, 11169, 11173, 11171, 11175);
+WHERE JOB_ID IN (13904);
 UPDATE job
 SET status = 0
-WHERE job_id IN (11155);
+WHERE job_id IN (13904);
 COMMIT;
 
 /*CREATE TABLE temp_dc_use_20220905 AS*/
@@ -204,3 +204,30 @@ FROM API_REQUEST;
 
 
 select * from VOUCHER_ORDER where ORDER_ID=3567;
+
+select *
+from VOUCHER_PROFILE;
+
+select *
+from VOUCHER where SER_NUM='5000000001348567';
+
+update VOUCHER set DAT_AMT= 1024000 where OLD_CARD ='1' and PROFILE_CODE='DC10'  and DAT_AMT='512000';
+
+
+select DAT_AMT,count(1)
+from VOUCHER where OLD_CARD ='1' and PROFILE_CODE='DC10'
+group BY DAT_AMT;
+
+update  VOUCHER set ACT_DAT=trunc(CRE_DAT)+1 where SER_NUM='5000000001348567';
+commit ;
+
+select *
+from API_REQUEST where REQUEST_CONTENT like '';
+
+select * from  rpt_order_summary where ORDER_ID=1000001969;
+
+select *
+from VOUCHER where PROFILE_CODE='QT150';
+
+select count(*)
+from VOUCHER;--10 712 538
