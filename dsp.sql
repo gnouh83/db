@@ -335,14 +335,13 @@ SELECT *
 FROM RPT_ORDER_SUMMARY_DAILY
 WHERE REMAIN_VALUE < 0;
 
-
 DECLARE
     dfrom date;
     dtill date;
     day   date;
 BEGIN
-    dfrom := TO_DATE('22.12.2020', 'dd.mm.yyyy');
-    dtill := TRUNC(SYSDATE);
+    dfrom := TO_DATE('01.12.2021', 'dd.mm.yyyy');
+    dtill := TO_DATE('31.03.2022', 'dd.mm.yyyy');
     day := dfrom;
 
     WHILE day <= dtill
@@ -353,6 +352,13 @@ BEGIN
         END LOOP;
 END;
 /
+begin
+    SUMMARY_ORDER_MONTHLY(to_date('01/12/2021','dd/mm/yyyy'));
+    SUMMARY_ORDER_MONTHLY(to_date('01/01/2022','dd/mm/yyyy'));
+    SUMMARY_ORDER_MONTHLY(to_date('01/02/2022','dd/mm/yyyy'));
+    SUMMARY_ORDER_MONTHLY(to_date('01/03/2022','dd/mm/yyyy'));
+    DBMS_OUTPUT.PUT_LINE('Done!');
+end;
 
 
 SELECT *

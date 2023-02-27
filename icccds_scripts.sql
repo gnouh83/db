@@ -170,6 +170,8 @@ CREATE TABLE sub_service_history
 )
 /
 
+--dsp_owner:
+GRANT SELECT ON dsp_owner.dsp_sub_service TO icccds_owner;
 
 CREATE OR REPLACE FUNCTION check_sub_service(p_isdn IN VARCHAR2,
                                              p_service IN VARCHAR2)
@@ -199,8 +201,10 @@ BEGIN
     RETURN v_count;
 END;
 /
-
-GRANT SELECT ON dsp_sms_command TO icccds_owner;
+--dsp_owner:
+GRANT SELECT ON dsp_owner.dsp_sms_command TO icccds_owner;
+ALTER TABLE dsp_owner.dsp_sms_command
+    ADD sys_type varchar2(1) DEFAULT '0' NOT NULL;
 
 CREATE VIEW sms_command AS
 SELECT cmd_id,
@@ -211,7 +215,7 @@ SELECT cmd_id,
        description,
        cmd_regex,
        status
-FROM dsp_sms_command
+FROM dsp_owner.dsp_sms_command
 WHERE sys_type IN (1, 3);
 
 
@@ -283,7 +287,7 @@ INSERT INTO dsp_sms_command
 VALUES (dsp_sms_command_seq.nextval, 'HUY_DATA', 'I', NULL, 2,
         'KHCN huy DATA từ DATA-CODE thông thường. Cú pháp HUY_DATA', 'HUY DATA', '1', '1');
 INSERT INTO dsp_sms_command
-VALUES (dsp_sms_command_seq.nextval, 'HUY_DATA', 'I', NULL, 2,
+VALUES (dsp_sms_command_seq.nextval, 'HUY_DATA_ON', 'I', NULL, 2,
         'KHCN huy DATA từ DATA-CODE ADDON. Cú pháp HUY_DATAON', 'HUY DATAON', '1', '1');
 
 INSERT INTO dsp_sms_command
@@ -470,7 +474,7 @@ SELECT com_id,
        parent_id,
        status,
        description,
-       NULL           type,
+       NVL(COMP_LEVEL,0)           type,
        province,
        city,
        district,
