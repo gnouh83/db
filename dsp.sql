@@ -635,10 +635,42 @@ WHERE tab_id IN (SELECT tab_id FROM dsp_service_price_tab WHERE service_id = 77 
 
 
 SELECT *
-FROM dsp_service_price_tab WHERE tab_id=641;
+FROM dsp_service_price_tab
+WHERE tab_id = 641;
 
 SELECT *
-FROM dsp_service_price where tab_id=641;
+FROM dsp_service_price
+WHERE tab_id = 641;
 
 SELECT *
 FROM dsp_service_price_tab;
+
+SELECT *
+FROM dsp_sub_service;
+
+ALTER TABLE dsp_sub_service
+    ADD (total_cycle number(10) DEFAULT '1' NOT NULL,
+         curr_cycle number(10) DEFAULT '1' NOT NULL,
+         last_exec_datetime date);
+ALTER TABLE dsp_sub_service_hist
+    ADD (total_cycle number(10) DEFAULT '1' NOT NULL,
+         curr_cycle number(10) DEFAULT '1' NOT NULL,
+         last_exec_datetime date);
+
+
+SELECT count(*)  from dsp_charging_csp_queue;
+
+SELECT * from dsp_charging_csp_queue where issue_time>=trunc(sysdate);
+--16/05 09:43:17 receiverServiceReq:isdn=898874128,serviceCode=9034,commandCode=DK VASDATA,packageCode=VASDATA,sourceCOde=CP,requestId=ct2_mpl_api_1680512633097,issueTime=2023-05-16 09:34:24.0
+COMMIT ;
+
+
+SELECT *
+FROM dsp_sub_service where isdn='934485604' ;
+
+
+delete dsp_charging_csp_queue where issue_time < to_date('16/05/2023 09:35:00','dd/mm/yyyy hh24:mi:ss');
+
+
+SELECT isdn, service, hid FROM dsp_sub_service WHERE isdn = '934555328' AND service = 'BDATASPONSOR1'  AND END_TIME > SYSDATE;
+SELECT * FROM dsp_sub_service WHERE isdn = '934555328';
