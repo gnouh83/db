@@ -341,17 +341,17 @@ WHERE remain_value < 0;
 DECLARE
     dfrom date;
     dtill date;
-    day   date;
+    today   date;
 BEGIN
     dfrom := TO_DATE('01.12.2021', 'dd.mm.yyyy');
     dtill := TO_DATE('31.03.2022', 'dd.mm.yyyy');
-    day := dfrom;
+    today := dfrom;
 
-    WHILE day <= dtill
+    WHILE today <= dtill
         LOOP
-            dbms_output.put_line(day);
-            summary_order_daily(day);
-            day := day + 1;
+            dbms_output.put_line(today);
+            SUMMARY_ORDER_DAILY(today);
+            today := today + 1;
         END LOOP;
 END;
 /
@@ -649,28 +649,103 @@ SELECT *
 FROM dsp_sub_service;
 
 ALTER TABLE dsp_sub_service
-    ADD (total_cycle number(10) DEFAULT '1' NOT NULL,
+    ADD (days number(10),
+         total_cycle number(10) DEFAULT '1' NOT NULL,
          curr_cycle number(10) DEFAULT '1' NOT NULL,
          last_exec_datetime date);
 ALTER TABLE dsp_sub_service_hist
-    ADD (total_cycle number(10) DEFAULT '1' NOT NULL,
+    ADD (days number(10),
+         total_cycle number(10) DEFAULT '1' NOT NULL,
          curr_cycle number(10) DEFAULT '1' NOT NULL,
          last_exec_datetime date);
 
+ALTER TABLE dsp_sub_service
+    ADD (days number(10));
 
-SELECT count(*)  from dsp_charging_csp_queue;
+SELECT COUNT(*)
+FROM dsp_charging_csp_queue;
 
-SELECT * from dsp_charging_csp_queue where issue_time>=trunc(sysdate);
+SELECT *
+FROM dsp_charging_csp_queue
+WHERE issue_time >= TRUNC(SYSDATE);
 --16/05 09:43:17 receiverServiceReq:isdn=898874128,serviceCode=9034,commandCode=DK VASDATA,packageCode=VASDATA,sourceCOde=CP,requestId=ct2_mpl_api_1680512633097,issueTime=2023-05-16 09:34:24.0
-COMMIT ;
+COMMIT;
 
 
 SELECT *
-FROM dsp_sub_service where isdn='934485604' ;
+FROM dsp_sub_service
+WHERE isdn = '934485604';
 
 
-delete dsp_charging_csp_queue where issue_time < to_date('16/05/2023 09:35:00','dd/mm/yyyy hh24:mi:ss');
+DELETE dsp_charging_csp_queue
+WHERE issue_time < TO_DATE('16/05/2023 09:35:00', 'dd/mm/yyyy hh24:mi:ss');
 
 
-SELECT isdn, service, hid FROM dsp_sub_service WHERE isdn = '934555328' AND service = 'BDATASPONSOR1'  AND END_TIME > SYSDATE;
-SELECT * FROM dsp_sub_service WHERE isdn = '934555328';
+SELECT isdn, service, hid
+FROM dsp_sub_service
+WHERE isdn = '934555328'
+  AND service = 'BDATASPONSOR1'
+  AND end_time > SYSDATE;
+SELECT *
+FROM dsp_sub_service
+WHERE isdn = '934555328';
+
+SELECT SYSDATE - 1 / 1440, SYSDATE
+FROM dual;
+
+SELECT isdn,
+       hid,
+       service,
+       profile,
+       NVL(total_cycle, 1) total_cycle,
+       NVL(curr_cycle, 1)  curr_cycle,
+       initial_amount,
+       NVL(days, 30)       days
+FROM dsp_sub_service
+WHERE end_time < SYSDATE - 1 / 1440;
+
+SELECT *
+FROM dsp_sub_service
+WHERE end_time < SYSDATE - 1 / 1440;
+
+SELECT *
+FROM dsp_sub_service_hist;
+
+UPDATE dsp_sub_service
+SET end_time=TO_DATE(?, 'yyyyMMddHHmmss'),
+    curr_cycle = ?,
+    last_update = SYSDATE
+WHERE hid = ?;
+
+ALTER TABLE dsp_sys_log
+    MODIFY reason varchar2(100);
+
+
+SELECT *
+FROM dsp_sub_service
+WHERE isdn = '987675234'
+  AND end_time < SYSDATE - 1 / 1440;
+
+
+SELECT object_name,
+       machine,
+       os_user_name,
+       sid,
+       serial#,
+       'alter system kill session ''' || sid || ',' || serial# || ''' immediate;'
+FROM gv$locked_object a,
+     gv$session b,
+     user_objects c
+WHERE a.object_id = c.object_id
+  AND b.sid = a.session_id;
+
+
+BEGIN
+    kill_session(161, 14502);
+END;
+
+SELECT *
+FROM dsp_sub_service WHERE hid='947';
+
+
+UPDATE dsp_sub_service SET end_time = to_date('20230623141210','yyyyMMddHH24miss'), curr_cycle = '2', last_update = sysdate,last_exec_datetime = sysdate WHERE hid = 947;
