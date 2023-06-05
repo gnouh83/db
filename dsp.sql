@@ -341,7 +341,7 @@ WHERE remain_value < 0;
 DECLARE
     dfrom date;
     dtill date;
-    today   date;
+    today date;
 BEGIN
     dfrom := TO_DATE('01.12.2021', 'dd.mm.yyyy');
     dtill := TO_DATE('31.03.2022', 'dd.mm.yyyy');
@@ -349,8 +349,8 @@ BEGIN
 
     WHILE today <= dtill
         LOOP
-            dbms_output.put_line(today);
-            SUMMARY_ORDER_DAILY(today);
+            dbms_output.put_line('Ngay ' || today);
+            summary_order_daily(today);
             today := today + 1;
         END LOOP;
 END;
@@ -745,7 +745,13 @@ BEGIN
 END;
 
 SELECT *
-FROM dsp_sub_service WHERE hid='947';
+FROM dsp_sub_service
+WHERE hid = '947';
 
 
-UPDATE dsp_sub_service SET end_time = to_date('20230623141210','yyyyMMddHH24miss'), curr_cycle = '2', last_update = sysdate,last_exec_datetime = sysdate WHERE hid = 947;
+UPDATE dsp_sub_service
+SET end_time           = TO_DATE('20230623141210', 'yyyyMMddHH24miss'),
+    curr_cycle         = '2',
+    last_update        = SYSDATE,
+    last_exec_datetime = SYSDATE
+WHERE hid = 947;
