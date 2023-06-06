@@ -343,8 +343,8 @@ DECLARE
     dtill date;
     today date;
 BEGIN
-    dfrom := TO_DATE('01.12.2021', 'dd.mm.yyyy');
-    dtill := TO_DATE('31.03.2022', 'dd.mm.yyyy');
+    dfrom := TO_DATE('01.01.2023', 'dd.mm.yyyy');
+    dtill := TO_DATE('05.06.2023', 'dd.mm.yyyy');
     today := dfrom;
 
     WHILE today <= dtill
@@ -356,10 +356,11 @@ BEGIN
 END;
 /
 BEGIN
-    summary_order_monthly(TO_DATE('01/12/2021', 'dd/mm/yyyy'));
-    summary_order_monthly(TO_DATE('01/01/2022', 'dd/mm/yyyy'));
-    summary_order_monthly(TO_DATE('01/02/2022', 'dd/mm/yyyy'));
-    summary_order_monthly(TO_DATE('01/03/2022', 'dd/mm/yyyy'));
+    summary_order_monthly(TO_DATE('01/01/2023', 'dd/mm/yyyy'));
+    summary_order_monthly(TO_DATE('01/02/2023', 'dd/mm/yyyy'));
+    summary_order_monthly(TO_DATE('01/03/2023', 'dd/mm/yyyy'));
+    summary_order_monthly(TO_DATE('01/04/2023', 'dd/mm/yyyy'));
+    summary_order_monthly(TO_DATE('01/05/2023', 'dd/mm/yyyy'));
     dbms_output.put_line('Done!');
 END;
 
