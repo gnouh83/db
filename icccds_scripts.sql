@@ -66,14 +66,13 @@ CREATE TABLE company
         CONSTRAINT comp_am_user_fk1 REFERENCES am_user,
     api_user_id    NUMBER(10)     NOT NULL
         CONSTRAINT comp_am_user_fk2 REFERENCES am_user,
-    public_key     VARCHAR2(4000),
+    public_key     CLOB,
     public_key_upt DATE,
     file_path      VARCHAR2(200),
     create_by      VARCHAR(50)    NOT NULL,
     create_date    DATE DEFAULT SYSDATE,
     upd_by         VARCHAR(50),
-    upt_date       DATE DEFAULT SYSDATE,
-    cps_mobile     varchar2(15)
+    upt_date       DATE DEFAULT SYSDATE
 )
 /
 
@@ -317,58 +316,14 @@ VALUES (dsp_sms_command_seq.nextval, 'TOP_UP_OK', 'O',
         'Quý khách đã nạp thành công gói {0}. Chi tiết liên hệ 9090.', 0,
         'KH nhắn tin đúng cú pháp tra cứu HUY_DATAON', NULL, '1', '1');
 
-INSERT INTO dsp_owner.dsp_sms_command (cmd_id, cmd_code, cmd_type, cmd_msg_content, cmd_param_count, description,
-                                       cmd_regex, status, sys_type)
-VALUES (dsp_sms_command_seq.nextval, 'DK_CB_1_D60_OK', 'O',
-        'Goi [DFD60] da duoc dang ky thanh cong. Quy khach duoc mien phi 3GB data toc do cao/ngay. HSD goi: {0}. Gia goi tu chu ky thu 2 tro di gia goi 60.000d/30 ngay. De kiem tra uu dai, soan KT_ALL gui 999. Chi tiet lien he 9090. Xin cam on!',
-        0, 'Thành công', NULL, '1', '1');
---top_up
-INSERT INTO dsp_owner.dsp_sms_command (cmd_id, cmd_code, cmd_type, cmd_msg_content, cmd_param_count, description, cmd_regex, status, sys_type)
-VALUES (dsp_sms_command_seq.nextval, 'DK_TOPUP', 'I', NULL, 3, 'Nạp thẻ TOPUP', 'NAP [a-zA-Z0-9_]+ 0\d{9}', '1', '1');
-
-INSERT INTO dsp_owner.dsp_sms_command (cmd_id, cmd_code, cmd_type, cmd_msg_content, cmd_param_count, description, cmd_regex, status, sys_type)
-VALUES (dsp_sms_command_seq.nextval, 'NO_GPRS', 'O', 'Thue bao {0} chua dang ky GPRS', 0, 'Thue bao chua dang ky GPRS', NULL, '1', '1');
-
-INSERT INTO dsp_sms_command
-VALUES (dsp_sms_command_seq.nextval, 'DK_DATA_F3', 'O',
-        'Thuê bao {0} hiện đang có một gói cước còn hiệu lực. Để tiếp tục topup, thuê bao {0} vui lòng hủy gói gói cước bằng cách soạn HUY_DATA gửi 9xxx, trong đó “_” là dấu cách. Hoặc chờ gói cước cũ hết hạn sử dụng. Chi tiết liên hệ 9090.', 0,
-        'Thuê bao đang có gói cước', NULL, '1', '1');
-INSERT INTO dsp_sms_command
-VALUES (dsp_sms_command_seq.nextval, 'SUB_NOT_EXIST', 'O',
-        'Thuê bao {0} không tồn tại.', 0,
-        'Thuê bao không tồn tại', NULL, '1', '1');
-INSERT INTO dsp_sms_command
-VALUES (dsp_sms_command_seq.nextval, 'DK_CB_2_F4', 'O',
-        'Thuê bao {0} không thuộc đối tượng tham gia chương trình. Chi tiết liên hệ 9090. Xin cảm ơn!', 0,
-        'Thuê bao đăng ký không thuộc đối tượng tham gia chương trình. Chi tiết liên hệ 9090. Xin cảm ơn!', NULL, '1', '1');
-INSERT INTO dsp_sms_command
-VALUES (dsp_sms_command_seq.nextval, 'DK_TOPUP_F1', 'O',
-        'Kho hàng của quý khách đã hết loại hàng hóa {0}.', 0,
-        'Kho hàng đã hết hoặc profile không tồn tại.', NULL, '1', '1');
-INSERT INTO dsp_sms_command
-VALUES (dsp_sms_command_seq.nextval, 'DK_TOPUP_OK', 'O',
-        'Gói {0} được nạp thành công cho thuê bao {1}.', 0,
-        'Nạp thành công gói cước cho thuê bao. Nhắn tin cho số thuê bao bán hàng.', NULL, '1', '1');
 
 UPDATE dsp_sms_command
 SET sys_type ='3'
 WHERE cmd_code IN
       ('DK_FAIL_ADD_DATA', 'DK_FAIL', 'DK_FAIL_NO_RETRY', 'NO_GPRS', 'SUB_NOT_EXIST', 'LOCK_ISDN', 'VOUCHER_USED',
-       'VOUCHER_NOT_FOUND', 'INVALID_FORMAT', 'SYSTEM_ERROR', 'KT_INVALID_SRV', '5003', 'DK_COMPANY', 'SYSTEM_UPGRADING');
+       'VOUCHER_NOT_FOUND', 'INVALID_FORMAT', 'SYSTEM_ERROR', 'KT_INVALID_SRV','SYSTEM_UPGRADING');
 
 COMMIT;
-
-ALTER TABLE comp_vas_mobile
-    DROP CONSTRAINT comp_vas_mobile_uk
-/
-
-ALTER TABLE comp_vas_mobile
-    ADD CONSTRAINT comp_vas_mobile_uk
-        UNIQUE (vas_mobile, status)
-/
-
-update comp_vas_mobile set status = '1' where status is null;
-COMMIT ;
 
 CREATE TABLE mt_queue
 (
@@ -507,55 +462,42 @@ SELECT com_id,
        tax_code,
        bus_code,
        address,
-       cps_mobile         vas_mobile,
-       rep_name           representative,
-       NULL               rep_phone,
+       cps_mobile     vas_mobile,
+       rep_name       representative,
+       NULL           rep_phone,
        rep_mobile,
        rep_position,
        email,
        public_key,
-       public_key_upt     updated_key,
-       web_user_id        user_id,
+       public_key_upt updated_key,
+       web_user_id    user_id,
        parent_id,
        status,
        description,
-       NVL(comp_level, 0) type,
+       NVL(COMP_LEVEL,0)           type,
        province,
        city,
        district,
        ward,
        file_path,
        cps_mobile,
-       NULL               serial_prefix,
-       NULL               api_public_key,
-       NULL               api_updated_key,
+       NULL           serial_prefix,
+       NULL           api_public_key,
+       NULL           api_updated_key,
        api_user_id,
-       NULL               group_id,
-       NULL               api_group_id,
-       NULL               bhtt_code,
-       NULL               check_date,
-       NULL               bk_check_date,
-       '3'                cust_type
+       NULL           group_id,
+       NULL           api_group_id,
+       NULL           bhtt_code,
+       NULL           check_date,
+       NULL           bk_check_date,
+       '3'            cust_type
 FROM icccds_owner.company;
 
-CREATE OR REPLACE PROCEDURE forward_icccds_mo(p_request_id NUMBER,
-                                              p_isdn VARCHAR2,
-                                              p_content VARCHAR2,
-                                              p_received_time VARCHAR2,
-                                              p_shortcode VARCHAR2,
-                                              p_retries NUMBER)
+CREATE OR REPLACE PROCEDURE dsp_owner.forward_icccds_mo(p_request_id NUMBER, p_isdn VARCHAR2, p_content VARCHAR2,
+                                              p_shortcode VARCHAR2, p_retries NUMBER)
     IS
 BEGIN
-    INSERT INTO icccds_owner.mo_queue
-    VALUES (p_request_id,
-            p_isdn,
-            p_content,
-            TO_DATE(p_received_time, 'dd/mm/yyyy hh24:mi:ss'),
-            p_shortcode,
-            p_retries);
-
+    INSERT INTO icccds_owner.mo_queue VALUES (p_request_id, p_isdn, p_content, SYSDATE, p_shortcode, p_retries);
     COMMIT;
 END;
 /
---UPDATE core xu ly tin nhan cua DSP thi moi hung tin nhan cua ICCCDS
---Ket xuat du lieu company
