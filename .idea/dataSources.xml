@@ -50,46 +50,12 @@
       <jdbc-url>jdbc:oracle:thin:@10.3.15.65:1521:dspreport</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="2022_DSP@10.54.5.68" uuid="98aef6cc-1326-45f4-a47c-6d579c811100">
-      <driver-ref>oracle.19</driver-ref>
-      <synchronize>true</synchronize>
-      <remarks>10.54.5.68</remarks>
-      <auto-commit>false</auto-commit>
-      <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
-      <jdbc-url>jdbc:oracle:thin:@10.54.5.68:1521:dsp</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-      <driver-properties>
-        <property name="autoCommit" value="false" />
-      </driver-properties>
-    </data-source>
-    <data-source source="LOCAL" name="2022_DC@10.54.5.68" uuid="36d2519b-11a2-4647-8100-01b6c960afd0">
-      <driver-ref>oracle.19</driver-ref>
-      <synchronize>true</synchronize>
-      <auto-commit>false</auto-commit>
-      <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
-      <jdbc-url>jdbc:oracle:thin:@10.54.5.68:1521:dsp</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-      <driver-properties>
-        <property name="autoCommit" value="false" />
-      </driver-properties>
-    </data-source>
     <data-source source="LOCAL" name="ICCCDS@10.11.10.12" uuid="45c8aad8-9de0-4e25-9169-5966a99039c5">
       <driver-ref>oracle.19</driver-ref>
       <synchronize>true</synchronize>
       <auto-commit>false</auto-commit>
       <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
       <jdbc-url>jdbc:oracle:thin:@10.11.10.12:1521:app</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-      <driver-properties>
-        <property name="autoCommit" value="false" />
-      </driver-properties>
-    </data-source>
-    <data-source source="LOCAL" name="2022_DSP@10.10.8.231" uuid="9ad70e32-1cb8-44b2-81cc-4565d4b5798d">
-      <driver-ref>oracle.19</driver-ref>
-      <synchronize>true</synchronize>
-      <auto-commit>false</auto-commit>
-      <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
-      <jdbc-url>jdbc:oracle:thin:@10.10.8.231:2521:dsp</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <driver-properties>
         <property name="autoCommit" value="false" />
@@ -102,18 +68,6 @@
       <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
       <jdbc-url>jdbc:oracle:thin:@10.11.10.12:1521:app</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="2022_REPORT@10.54.5.68" uuid="51d3591a-61f9-4408-8d46-5a4c018e8584">
-      <driver-ref>oracle.19</driver-ref>
-      <synchronize>true</synchronize>
-      <remarks>10.54.5.68</remarks>
-      <auto-commit>false</auto-commit>
-      <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
-      <jdbc-url>jdbc:oracle:thin:@10.54.5.68:1521:dsp</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-      <driver-properties>
-        <property name="autoCommit" value="false" />
-      </driver-properties>
     </data-source>
     <data-source source="LOCAL" name="wallet_loyal@10.11.10.12" uuid="13e7d666-1d03-4670-b055-e38f4bac3195">
       <driver-ref>oracle.19</driver-ref>
@@ -147,7 +101,7 @@
       <jdbc-url>jdbc:oracle:thin:@10.11.10.121:1521:cust</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="@10.11.10.122" uuid="f1104db2-0832-48d0-b5a1-4ad76f0e10a7">
+    <data-source source="LOCAL" name="CRM_REPORT@10.11.10.122" uuid="f1104db2-0832-48d0-b5a1-4ad76f0e10a7">
       <driver-ref>oracle.19</driver-ref>
       <synchronize>true</synchronize>
       <auto-commit>false</auto-commit>
