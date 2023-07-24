@@ -6,15 +6,23 @@ ORDER BY cmd_id;
 
 SELECT *
 FROM dsp_sys_log
-WHERE exec_datetime >= trunc(sysdate) and TRANS_ID='vmedia_api_com_1670474904633'
+WHERE exec_datetime >= trunc(sysdate)
+  and TRANS_ID = 'vmedia_api_com_1670474904633'
 ORDER BY log_id;
 
 SELECT *
 FROM dsp_sys_log
-WHERE exec_datetime >= TO_DATE('15/12/2022', 'dd/mm/yyyy')
-  AND ISDN = '906328167'
+WHERE exec_datetime >= TO_DATE('24/06/2023', 'dd/mm/yyyy')
+  and exec_datetime < TO_DATE('24/06/2023', 'dd/mm/yyyy') + 1
+  AND ISDN = '936707038'
+  and REQUEST like '%020000010582948%'
 ORDER BY log_id;
 
+select *
+from DSP_MT_HISTORY where ISDN='84936707038' and PROCESS_TIME>=TO_DATE('24/06/2023', 'dd/mm/yyyy');
+
+select *
+from DSP_MO_HISTORY where isdn='936707038';
 
 --The da nap
 SELECT b.card_name, SUM(b.amount) AS amount, c.price, c.cap_max, a.res_order_id
@@ -353,10 +361,10 @@ BEGIN
 END;
 /
 begin
-    SUMMARY_ORDER_MONTHLY(to_date('01/12/2021','dd/mm/yyyy'));
-    SUMMARY_ORDER_MONTHLY(to_date('01/01/2022','dd/mm/yyyy'));
-    SUMMARY_ORDER_MONTHLY(to_date('01/02/2022','dd/mm/yyyy'));
-    SUMMARY_ORDER_MONTHLY(to_date('01/03/2022','dd/mm/yyyy'));
+    SUMMARY_ORDER_MONTHLY(to_date('01/12/2021', 'dd/mm/yyyy'));
+    SUMMARY_ORDER_MONTHLY(to_date('01/01/2022', 'dd/mm/yyyy'));
+    SUMMARY_ORDER_MONTHLY(to_date('01/02/2022', 'dd/mm/yyyy'));
+    SUMMARY_ORDER_MONTHLY(to_date('01/03/2022', 'dd/mm/yyyy'));
     DBMS_OUTPUT.PUT_LINE('Done!');
 end;
 
@@ -539,28 +547,45 @@ SELECT *
 FROM DSP_TRANSACTION
 WHERE RES_ORDER_ID = 'ruTsQGKTOcsOhKk6Phg7/er6KSo=';
 
-SELECT * from API_REQUEST ORDER BY REQ_TIME desc;
+SELECT *
+from API_REQUEST
+ORDER BY REQ_TIME desc;
 
 
-SELECT u.user_id, u.user_name,u.password,u.expire_status,u.modified_password, c.api_public_key
-FROM am_user u, am_group_user ug, am_group g, dsp_company c
-WHERE     u.user_id = ug.user_id
+SELECT u.user_id, u.user_name, u.password, u.expire_status, u.modified_password, c.api_public_key
+FROM am_user u,
+     am_group_user ug,
+     am_group g,
+     dsp_company c
+WHERE u.user_id = ug.user_id
   AND ug.GROUP_ID = g.GROUP_ID
   AND u.user_id = c.api_user_id
   AND c.api_public_key IS NOT NULL
-  AND g.GROUP_ID IN (SELECT par_value FROM ap_param
-                     WHERE par_name = 'API_GROUP_ID' AND par_type = 'SYSTEM')
-  AND NVL (g.status, 1) > 0
-  AND NVL (u.status, 1) > 0 order by u.USER_NAME;
+  AND g.GROUP_ID IN (SELECT par_value
+                     FROM ap_param
+                     WHERE par_name = 'API_GROUP_ID'
+                       AND par_type = 'SYSTEM')
+  AND NVL(g.status, 1) > 0
+  AND NVL(u.status, 1) > 0
+order by u.USER_NAME;
 
-select * from DSP_COMPANY where COM_ID=621;
-SELECT * from DIP_REQUEST_HIST ORDER BY REQUEST_TIME desc;
+select *
+from DSP_COMPANY
+where COM_ID = 621;
+SELECT *
+from DIP_REQUEST_HIST
+ORDER BY REQUEST_TIME desc;
 
-select * from DSP_DD_HISTORY;
+select *
+from DSP_DD_HISTORY;
 
-select * from DSP_SMS_COMMAND where CMD_CODE='CMD_DK_DIP_OK';
-alter TABLE  DIP_REQUEST_HIST ADD ORDER_ID       NUMBER(15) ;
-select * from dip_sub_service;
+select *
+from DSP_SMS_COMMAND
+where CMD_CODE = 'CMD_DK_DIP_OK';
+alter TABLE DIP_REQUEST_HIST
+    ADD ORDER_ID NUMBER(15);
+select *
+from dip_sub_service;
 
 
 SELECT MAX((100 - ROUND((NVL(b.bytes_free, 0) / a.bytes_alloc) * 100, 2)))
@@ -577,7 +602,12 @@ FROM (SELECT f.tablespace_name,
 WHERE a.tablespace_name = b.tablespace_name(+)
   AND a.tablespace_name = 'DATA';
 
-SELECT * from  API_REQUEST order by REQ_ID desc;
+SELECT *
+from API_REQUEST
+order by REQ_ID desc;
 
 
-select * from DSP_SYS_LOG where EXEC_DATETIME>trunc(sysdate) and TRANS_ID ='vmedia_api_com_1670224040163';
+select *
+from DSP_SYS_LOG
+where EXEC_DATETIME > trunc(sysdate)
+  and TRANS_ID = 'vmedia_api_com_1670224040163';

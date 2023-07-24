@@ -133,5 +133,16 @@
       <jdbc-url>jdbc:oracle:thin:@10.11.10.120:1521:master</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="sim_test@10.11.10.12" uuid="e99b3e8e-33ac-4ad6-b3bd-2442dd2808bc">
+      <driver-ref>oracle.19</driver-ref>
+      <synchronize>true</synchronize>
+      <auto-commit>false</auto-commit>
+      <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
+      <jdbc-url>jdbc:oracle:thin:@10.11.10.12:1521:app</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+      <driver-properties>
+        <property name="autoCommit" value="false" />
+      </driver-properties>
+    </data-source>
   </component>
 </project>
