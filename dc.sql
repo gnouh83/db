@@ -1,24 +1,33 @@
-SELECT Ser_num, ADDON, CRE_DAT, EXP_DAT, DAT_AMT, DAT_DAY, PROFILE_CODE
-FROM VOUCHER
-where order_id=0;
+/*THEM TRUONG TRONG BANG -----------------------------------------------------------------------------------------------*/
+/*09-2023*/
+alter table voucher add hold_time date;
+
+insert into api VALUES (40,'HoldDC','/usr/hold_dc','Giu the truoc khi gach the','1');
+insert into api VALUES (41,'UnHoldDC','/usr/un_hold_dc','Bo giu the truoc khi gach the','1');
+commit;
+/*----------------------------------------------------------------------------------------------------------------------*/
+SELECT ser_num, addon, cre_dat, exp_dat, dat_amt, dat_day, profile_code
+FROM voucher
+WHERE order_id = 0;
 
 SELECT *
-FROM VOUCHER where enc_pin='R4TZ5maG2eUBSSLiIkjW/LT51sBQ6w3hqwdUzDD7DOQ=';
-    SELECT *
-FROM VOUCHER
-WHERE SER_NUM IN ('020000002479039', '020000002479141', '020000002479111', '020000002479037', '020000002479221');
+FROM voucher
+WHERE enc_pin = 'R4TZ5maG2eUBSSLiIkjW/LT51sBQ6w3hqwdUzDD7DOQ=';
 SELECT *
-FROM VOUCHER
-     --where ORDER_ID=1000001153
+FROM voucher
+WHERE ser_num IN ('020000002479039', '020000002479141', '020000002479111', '020000002479037', '020000002479221');
+SELECT *
+FROM voucher
+--where ORDER_ID=1000001153
 ORDER BY order_id DESC;
 
 
 SELECT *
-FROM VOUCHER_2;
+FROM voucher_2;
 SELECT *
-FROM API_REQUEST
-WHERE REQUEST_TIME >= TRUNC(SYSDATE)
-  AND TRANS_ID IN (
+FROM api_request
+WHERE request_time >= TRUNC(SYSDATE)
+  AND trans_id IN (
                    'ct2_mpl_api_1665026662586',
                    'ct2_mpl_api_1665027821074',
                    'ct2_mpl_api_1663660235648',
@@ -27,23 +36,23 @@ WHERE REQUEST_TIME >= TRUNC(SYSDATE)
     );
 
 SELECT *
-FROM VOUCHER_ORDER
-WHERE ORDER_id = 1000001157
-ORDER BY ORDER_ID DESC;
+FROM voucher_order
+WHERE order_id = 1000001157
+ORDER BY order_id DESC;
 
 SELECT *
-FROM VOUCHER_ORDER_DETAIL
-WHERE ORDER_ID = 1000001157;
+FROM voucher_order_detail
+WHERE order_id = 1000001157;
 
 SELECT *
 FROM temp_dc_use_20220905;
 
 
 SELECT *
-FROM EMAIL_HISTORY
-WHERE ORDER_ID = 1000003239;
+FROM email_history
+WHERE order_id = 1000003239;
 SELECT *
-FROM EMAIL_QUEUE;
+FROM email_queue;
 
 
 --
@@ -54,10 +63,10 @@ WHERE p1 = '3201';
 --Cập nhật lại trạng thái job bị lỗi (id job lấy trên log tiến trình gửi email)
 SELECT *
 FROM job
-WHERE JOB_ID IN (13904);
+WHERE job_id IN (18532);
 UPDATE job
 SET status = 0
-WHERE job_id IN (13904);
+WHERE job_id IN (18532);
 COMMIT;
 
 /*CREATE TABLE temp_dc_use_20220905 AS*/
@@ -103,17 +112,17 @@ GROUP BY a.com_name
 ;
 
 SELECT *
-FROM DSP_COMPANY
-WHERE COM_ID = 881;
+FROM dsp_company
+WHERE com_id = 881;
 
 SELECT *
-FROM VOUCHER_PROFILE
-ORDER BY PROFILE_ID;
+FROM voucher_profile
+ORDER BY profile_id;
 
 SELECT *
-FROM VOUCHER
-WHERE ORDER_ID = '1000000891'
-  AND USED <> '1';
+FROM voucher
+WHERE order_id = '1000000891'
+  AND used <> '1';
 
 
 BEGIN
@@ -146,47 +155,45 @@ FROM (SELECT TO_DATE('27/08/2022', 'dd/mm/yyyy') sum_dat,
                  END)                            not_yet,
              SUM(CASE
                      WHEN exp_dat >= TO_DATE('27/08/2022', 'dd/mm/yyyy') AND
-                          exp_dat < TO_DATE('28/08/2022', 'dd/mm/yyyy') AND USED = 0 THEN 1
+                          exp_dat < TO_DATE('28/08/2022', 'dd/mm/yyyy') AND used = 0 THEN 1
                      ELSE 0
                  END)                            expired_in_period
       FROM voucher
-      WHERE ORDER_ID = '1000001270'
+      WHERE order_id = '1000001270'
         AND exp_dat >= TO_DATE('27/08/2022', 'dd/mm/yyyy')
         AND cre_dat < TO_DATE('28/08/2022', 'dd/mm/yyyy')
       GROUP BY TO_DATE('27/08/2022', 'dd/mm/yyyy'), TRUNC(cre_dat), order_id, addon, profile_code) a;
 
 
 SELECT *
-FROM RPT_ORDER_SUMMARY_DAILY
-WHERE TOTAL = EXPIRED_IN_PERIOD
-
-
-  AND TOTAL = USED + NOT_YET;
+FROM rpt_order_summary_daily
+WHERE total = expired_in_period
+AND total = used + not_yet;
 
 SELECT *
-FROM VOUCHER
-WHERE ORDER_ID = 1000001419;
+FROM voucher
+WHERE order_id = 1000001419;
 
 SELECT *
-FROM RPT_ORDER_SUMMARY_DAILY
-WHERE ORDER_ID = 1000001270
-ORDER BY SUM_DAT;
+FROM rpt_order_summary_daily
+WHERE order_id = 1000001270
+ORDER BY sum_dat;
 
 
-UPDATE RPT_ORDER_SUMMARY_DAILY
-SET EXPIRED_IN_PERIOD=NOT_YET
-WHERE TOTAL = EXPIRED_IN_PERIOD;
+UPDATE rpt_order_summary_daily
+SET expired_in_period=not_yet
+WHERE total = expired_in_period;
 COMMIT;
 
 SELECT profile_code,
-       SUM(activeN2),
-       SUM(activeN1),
+       SUM(activen2),
+       SUM(activen1),
        SUM(created),
        SUM(used),
        SUM(locked),
        SUM(deleted),
-       SUM(activeN1) - SUM(activeN2) - SUM(created) + SUM(used) + SUM(locked) delta
-FROM (SELECT profile_code, SUM(active) activeN2, 0 activeN1, 0 created, 0 used, 0 locked, 0 deleted
+       SUM(activen1) - SUM(activen2) - SUM(created) + SUM(used) + SUM(locked) delta
+FROM (SELECT profile_code, SUM(active) activen2, 0 activen1, 0 created, 0 used, 0 locked, 0 deleted
       FROM voucher_statistic_daily
       WHERE stat_date = TRUNC(SYSDATE) - 1
       GROUP BY profile_code
@@ -200,34 +207,124 @@ ORDER BY profile_code;
 
 
 SELECT *
-FROM API_REQUEST;
+FROM api_request;
 
 
-select * from VOUCHER_ORDER where ORDER_ID=3567;
+SELECT *
+FROM voucher_order
+WHERE order_id = 3567;
 
-select *
-from VOUCHER_PROFILE;
+SELECT *
+FROM voucher_profile;
 
-select *
-from VOUCHER where SER_NUM='5000000001348567';
+SELECT *
+FROM voucher
+WHERE ser_num = '5000000001348567';
 
-update VOUCHER set DAT_AMT= 1024000 where OLD_CARD ='1' and PROFILE_CODE='DC10'  and DAT_AMT='512000';
+UPDATE voucher
+SET dat_amt= 1024000
+WHERE old_card = '1'
+  AND profile_code = 'DC10'
+  AND dat_amt = '512000';
 
 
-select DAT_AMT,count(1)
-from VOUCHER where OLD_CARD ='1' and PROFILE_CODE='DC10'
-group BY DAT_AMT;
+SELECT dat_amt, COUNT(1)
+FROM voucher
+WHERE old_card = '1'
+  AND profile_code = 'DC10'
+GROUP BY dat_amt;
 
-update  VOUCHER set ACT_DAT=trunc(CRE_DAT)+1 where SER_NUM='5000000001348567';
-commit ;
+UPDATE voucher
+SET act_dat=TRUNC(cre_dat) + 1
+WHERE ser_num = '5000000001348567';
+COMMIT;
 
-select *
-from API_REQUEST where REQUEST_CONTENT like '';
+SELECT *
+FROM api_request
+WHERE request_content LIKE '';
 
-select * from  rpt_order_summary where ORDER_ID=1000001969;
+SELECT *
+FROM rpt_order_summary
+WHERE order_id = 1000001969;
 
-select *
-from VOUCHER where PROFILE_CODE='QT150';
+SELECT *
+FROM voucher
+WHERE profile_code = 'QT150';
 
-select count(*)
-from VOUCHER;--10 712 538
+SELECT COUNT(*)
+FROM voucher;--10 712 538
+
+
+SELECT *
+FROM voucher
+WHERE use_tim IS NULL
+  AND cre_dat < TO_DATE('01/01/2022', 'dd/mm/yyyy');
+
+
+SELECT *
+FROM voucher
+WHERE ser_num = '020000011090933';
+
+
+SELECT a.ser_num,
+       a.cre_dat,
+       a.act_dat,
+       a.use_tim,
+       a.exp_dat,
+       a.del_dat,
+       a.sus_dat,
+       a.used,
+       a.ref,
+       a.order_id,
+       a.status,
+       a.dat_amt,
+       a.dat_day,
+       a.addon,
+       a.profile_code,
+       a.old_card
+FROM voucher a;
+
+
+SELECT COUNT(1)
+FROM voucher_order;
+
+SELECT *
+FROM voucher_order_detail;
+SELECT ser_num
+           cre_dat,
+       act_dat,
+       use_tim,
+       exp_dat,
+       del_dat,
+       sus_dat,
+       used,
+       ref,
+       order_id,
+       status,
+       dat_amt,
+       dat_day,
+       addon,
+       profile_code,
+       old_card
+FROM voucher;
+
+
+SELECT *
+FROM voucher_order where order_code='TleiYTtb6NpLT0UEcvOgXwfl+Yc=';
+
+
+SELECT *
+FROM voucher_profile;
+
+SELECT *
+FROM voucher;
+
+
+
+SELECT *
+FROM api;
+
+
+
+SELECT *
+FROM voucher_used;

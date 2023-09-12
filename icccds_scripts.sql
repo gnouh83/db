@@ -321,7 +321,7 @@ UPDATE dsp_sms_command
 SET sys_type ='3'
 WHERE cmd_code IN
       ('DK_FAIL_ADD_DATA', 'DK_FAIL', 'DK_FAIL_NO_RETRY', 'NO_GPRS', 'SUB_NOT_EXIST', 'LOCK_ISDN', 'VOUCHER_USED',
-       'VOUCHER_NOT_FOUND', 'INVALID_FORMAT', 'SYSTEM_ERROR', 'KT_INVALID_SRV','SYSTEM_UPGRADING');
+       'VOUCHER_NOT_FOUND', 'INVALID_FORMAT', 'SYSTEM_ERROR', 'KT_INVALID_SRV', 'SYSTEM_UPGRADING');
 
 COMMIT;
 
@@ -462,42 +462,101 @@ SELECT com_id,
        tax_code,
        bus_code,
        address,
-       cps_mobile     vas_mobile,
-       rep_name       representative,
-       NULL           rep_phone,
+       cps_mobile         vas_mobile,
+       rep_name           representative,
+       NULL               rep_phone,
        rep_mobile,
        rep_position,
        email,
        public_key,
-       public_key_upt updated_key,
-       web_user_id    user_id,
+       public_key_upt     updated_key,
+       web_user_id        user_id,
        parent_id,
        status,
        description,
-       NVL(COMP_LEVEL,0)           type,
+       NVL(comp_level, 0) type,
        province,
        city,
        district,
        ward,
        file_path,
        cps_mobile,
-       NULL           serial_prefix,
-       NULL           api_public_key,
-       NULL           api_updated_key,
+       NULL               serial_prefix,
+       NULL               api_public_key,
+       NULL               api_updated_key,
        api_user_id,
-       NULL           group_id,
-       NULL           api_group_id,
-       NULL           bhtt_code,
-       NULL           check_date,
-       NULL           bk_check_date,
-       '3'            cust_type
+       NULL               group_id,
+       NULL               api_group_id,
+       NULL               bhtt_code,
+       NULL               check_date,
+       NULL               bk_check_date,
+       '3'                cust_type
 FROM icccds_owner.company;
 
 CREATE OR REPLACE PROCEDURE dsp_owner.forward_icccds_mo(p_request_id NUMBER, p_isdn VARCHAR2, p_content VARCHAR2,
-                                              p_shortcode VARCHAR2, p_retries NUMBER)
+                                                        p_shortcode VARCHAR2, p_retries NUMBER)
     IS
 BEGIN
     INSERT INTO icccds_owner.mo_queue VALUES (p_request_id, p_isdn, p_content, SYSDATE, p_shortcode, p_retries);
     COMMIT;
 END;
 /
+
+--20230905
+
+CREATE SEQUENCE icccds_owner.mbf30_file_seq
+    NOCACHE
+/
+
+ALTER TABLE orders ADD file_id_list varchar2(500);
+
+CREATE TABLE mbf30_file
+(
+    file_id        NUMBER(10)              NOT NULL,
+    file_name      VARCHAR2(1000),
+    com_id         NUMBER(10)              NOT NULL
+        CONSTRAINT mbf30_file_fk
+            REFERENCES icccds_owner.company,
+    profile_id     NUMBER(10),
+    profile_code   VARCHAR2(20)            NOT NULL,
+    total          NUMBER(10)              NOT NULL,
+    issue_datetime DATE        DEFAULT SYSDATE,
+    status         VARCHAR2(1) DEFAULT '0' NOT NULL
+        CONSTRAINT "MBF30_FILE_fk2"
+            REFERENCES icccds_owner.profile,
+    CONSTRAINT mbf30_file_pk
+        PRIMARY KEY (file_id, com_id, profile_code)
+)
+/
+
+COMMENT ON COLUMN mbf30_file.status IS '0: Chua xu ly, 1: Da tao don thanh cong'
+/
+
+
+CREATE TABLE mbf30_file_dtl
+(
+    file_id        number(10)     NOT NULL,
+    isdn           varchar2(20)
+        CONSTRAINT isdn_uk UNIQUE NOT NULL,
+    com_id         number(10)     NOT NULL
+        CONSTRAINT mbf30_file_dtl_fk
+            REFERENCES icccds_owner.company,
+    profile_code   varchar2(20)   NOT NULL,
+    issue_datetime date DEFAULT SYSDATE
+);
+
+ALTER TABLE mbf30_file
+    DROP PRIMARY KEY
+/
+
+ALTER TABLE mbf30_file
+    ADD CONSTRAINT mbf30_file_pk
+        PRIMARY KEY (file_id, com_id, profile_code)
+/
+
+
+
+
+
+
+
