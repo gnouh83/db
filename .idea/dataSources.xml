@@ -159,5 +159,20 @@
       <jdbc-url>jdbc:oracle:thin:@10.54.5.69:1521:dsp</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="db_jira@10.11.10.225" uuid="0245f0df-05a9-40b9-85f1-3a0f597e4630">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://10.11.10.225:3306/db_jira</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="@10.11.10.154" uuid="a3a02a99-29d5-4ecd-9937-490a4d930886">
+      <driver-ref>oracle.19</driver-ref>
+      <synchronize>true</synchronize>
+      <auto-commit>false</auto-commit>
+      <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
+      <jdbc-url>jdbc:oracle:thin:@//10.11.10.154:1521/cbs</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

@@ -1,10 +1,13 @@
 /*THEM TRUONG TRONG BANG -----------------------------------------------------------------------------------------------*/
 /*09-2023*/
-alter table voucher add hold_time date;
+ALTER TABLE voucher
+    ADD hold_time date;
 
-insert into api VALUES (40,'HoldDC','/usr/hold_dc','Giu the truoc khi gach the','1');
-insert into api VALUES (41,'UnHoldDC','/usr/un_hold_dc','Bo giu the truoc khi gach the','1');
-commit;
+INSERT INTO api
+VALUES (40, 'HoldDC', '/usr/hold_dc', 'Giu the truoc khi gach the', '1');
+INSERT INTO api
+VALUES (41, 'UnHoldDC', '/usr/un_hold_dc', 'Bo giu the truoc khi gach the', '1');
+COMMIT;
 /*----------------------------------------------------------------------------------------------------------------------*/
 SELECT ser_num, addon, cre_dat, exp_dat, dat_amt, dat_day, profile_code
 FROM voucher
@@ -168,7 +171,7 @@ FROM (SELECT TO_DATE('27/08/2022', 'dd/mm/yyyy') sum_dat,
 SELECT *
 FROM rpt_order_summary_daily
 WHERE total = expired_in_period
-AND total = used + not_yet;
+  AND total = used + not_yet;
 
 SELECT *
 FROM voucher
@@ -263,7 +266,7 @@ WHERE use_tim IS NULL
 
 SELECT *
 FROM voucher
-WHERE ser_num = '020000011090933';
+WHERE ser_num = '020000012975427';
 
 
 SELECT a.ser_num,
@@ -310,15 +313,26 @@ FROM voucher;
 
 
 SELECT *
-FROM voucher_order where order_code='TleiYTtb6NpLT0UEcvOgXwfl+Yc=';
+FROM voucher_order
+WHERE order_code = '4rFkrWiND5jq1LzDgCkvLctjd7w=';--> order_id = 1000004326
 
+SELECT count(1)
+FROM voucher
+WHERE order_id = 1000004404
+  AND used = 1
+  AND use_tim >= TO_DATE('01/06/2023', 'dd/mm/yyyy')
+  AND use_tim < TO_DATE('30/06/2023', 'dd/mm/yyyy')+1 ORDER BY  use_tim ;
 
 SELECT *
 FROM voucher_profile;
 
 SELECT *
-FROM voucher;
+FROM voucher
+WHERE enc_pin = 'WLVIHKNIHCEYHw8AEN46uXdGZP0amshas1SKxnXx7Hs='
+  AND ser_num = '020000012975427';
 
+SELECT *
+FROM voucher where ser_num='120000010883788';
 
 
 SELECT *
@@ -328,3 +342,19 @@ FROM api;
 
 SELECT *
 FROM voucher_used;
+
+SELECT *
+FROM api_request where request_content like '%120000010883788%' and REQUEST_TIME> TO_DATE('01/06/2023', 'dd/mm/yyyy')
+  AND REQUEST_TIME < TO_DATE('02/06/2023', 'dd/mm/yyyy') + 3;
+
+
+SELECT *
+FROM api_request
+WHERE request_time > TRUNC(SYSDATE)
+  AND trans_id = 'webapi_1690519107934';
+
+SELECT *
+FROM voucher_profile;
+
+SELECT *
+FROM am_user;

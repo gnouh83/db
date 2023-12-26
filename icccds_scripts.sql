@@ -1,3 +1,6 @@
+/*20231108*/
+INSERT INTO api VALUES ('50','Nap TopUp','/nap_top_up','Cộng dịch vụ DATA/VASP profile bằng API','1');
+COMMIT ;
 /*DROP TABLE shop;
 DROP TABLE company;*/
 GRANT SELECT ON dsp_sub_service TO icccds_owner;

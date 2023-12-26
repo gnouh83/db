@@ -1,30 +1,48 @@
-SELECT * FROM v$version;
- select open_mode, controlfile_type from v$database;
-SELECT dest_id, database_mode, recovery_mode, protection_mode FROM v$archive_dest_status WHERE destination IS NOT NULL;
-SELECT log_mode FROM v$database;
 SELECT *
-FROM dsp_loyalty ORDER BY loyalty_id DESC ;
+FROM v$version;
+SELECT open_mode, controlfile_type
+FROM v$database;
+SELECT dest_id, database_mode, recovery_mode, protection_mode
+FROM v$archive_dest_status
+WHERE destination IS NOT NULL;
+SELECT log_mode
+FROM v$database;
+SELECT *
+FROM dsp_loyalty
+ORDER BY loyalty_id DESC;
 
 SELECT *
-FROM ap_param where par_type='LOYALTY_COMPANY';
+FROM ap_param
+WHERE par_type = 'LOYALTY_COMPANY';
 
 SELECT *
-FROM api_request;
-
+FROM api_request
+WHERE req_time >= TRUNC(SYSDATE - 1);
 
 SELECT *
-FROM dba_data_files where tablespace_name ='DATA';
+FROM api_request
+WHERE path = '/un_hold_dc'
+ORDER BY req_id DESC;
+
+SELECT *
+FROM dsp_sys_log
+WHERE exec_datetime >= TRUNC(SYSDATE - 1);
+
+SELECT *
+FROM dba_data_files
+WHERE tablespace_name = 'DATA';
 
 
 --ALTER TABLESPACE indx200801  ADD DATAFILE '/u03/app/oracle/oradata/bill/indx200801_04.dbf' SIZE 16GB;
 
-ALTER TABLESPACE DATA ADD DATAFILE '+DATA/dsp/datafile/data.296' size 16G AUTOEXTEND OFF;
-ALTER TABLESPACE DATA ADD DATAFILE '+DATA/dsp/datafile/data.297' size 16G AUTOEXTEND OFF;
-ALTER TABLESPACE DATA ADD DATAFILE '+DATA/dsp/datafile/data.298' size 16G AUTOEXTEND OFF;
-ALTER TABLESPACE DATA ADD DATAFILE '+DATA/dsp/datafile/data.299' size 16G AUTOEXTEND OFF;
+ALTER TABLESPACE data ADD DATAFILE '+DATA/dsp/datafile/data.296' SIZE 16G AUTOEXTEND OFF;
+ALTER TABLESPACE data ADD DATAFILE '+DATA/dsp/datafile/data.297' SIZE 16G AUTOEXTEND OFF;
+ALTER TABLESPACE data ADD DATAFILE '+DATA/dsp/datafile/data.298' SIZE 16G AUTOEXTEND OFF;
+ALTER TABLESPACE data ADD DATAFILE '+DATA/dsp/datafile/data.299' SIZE 16G AUTOEXTEND OFF;
 
 
-select name,total_mb,free_mb,free_mb/total_mb*100 "%Free space" from v$asm_diskgroup;
+SELECT name, total_mb, free_mb, free_mb / total_mb * 100 "%Free space"
+FROM v$asm_diskgroup;
 ------------------------------------------------------------------------------------------------------------------------
 SELECT *
 FROM dsp_company;
@@ -911,108 +929,147 @@ ORDER BY sum_date;
 
 
 SELECT *
-FROM (
-SELECT o.com_id,
-       o.order_id,
-       CASE
-           WHEN o.order_time >= TO_DATE('01/08/2023', 'dd/mm/yyyy')
-               THEN
-               NVL(o.contract_value, 0)
-           ELSE
-               NVL(ol.remain_value, '0')
-           END               start_value,
-       NVL(u.amount_used, 0) used_value,
-       CASE
-           WHEN o.expire_time < TO_DATE('01/09/2023', 'dd/mm/yyyy') THEN NVL(o.remain_value, 0)
-           ELSE 0
-           END               expired_value,
-       CASE
-           WHEN o.order_time >= TO_DATE('01/08/2023', 'dd/mm/yyyy')
-               THEN
-               NVL(o.contract_value, 0)
-           ELSE
-               NVL(ol.remain_value, 0)
-           END
-           - NVL(u.amount_used, 0)
-           - CASE
+FROM (SELECT o.com_id,
+             o.order_id,
+             CASE
+                 WHEN o.order_time >= TO_DATE('01/08/2023', 'dd/mm/yyyy')
+                     THEN
+                     NVL(o.contract_value, 0)
+                 ELSE
+                     NVL(ol.remain_value, '0')
+                 END               start_value,
+             NVL(u.amount_used, 0) used_value,
+             CASE
                  WHEN o.expire_time < TO_DATE('01/09/2023', 'dd/mm/yyyy') THEN NVL(o.remain_value, 0)
                  ELSE 0
-           END               remain_value,
-       TO_DATE('01/08/2023', 'dd/mm/yyyy')
-FROM dsp_order o,
-     (SELECT *
-      FROM rpt_order_summary
-      WHERE sum_date = ADD_MONTHS(TO_DATE('01/08/2023', 'dd/mm/yyyy'), -1)) ol,
-     (SELECT order_id, SUM(amount_used) amount_used
-      FROM (SELECT order_id,
-                   SUM(NVL(DECODE(t.service_id, 50, ot.success_amount, 78, ot.success_amount, ot.amount),
-                           0)) amount_used
-            FROM dsp_order_transaction ot,
-                 dsp_transaction t
-            WHERE ot.transaction_id = t.transaction_id
-              AND t.status IN (6,3)
-              AND ot.issue_time >= TO_DATE('01/08/2023', 'dd/mm/yyyy')
-              AND ot.issue_time < TO_DATE('01/09/2023', 'dd/mm/yyyy')
-            GROUP BY ot.order_id
-            UNION ALL
-            SELECT TO_NUMBER(order_id) order_id, SUM(req_cost) amount_used
-            FROM dsp_dd_history
-            WHERE channel IN ('API_DDP', 'API_DD')
-              AND status = 1
-              AND request_time >= TO_DATE('01/08/2023', 'dd/mm/yyyy')
-              AND request_time < TO_DATE('01/09/2023', 'dd/mm/yyyy')
-            GROUP BY order_id)
-      GROUP BY order_id) u
-WHERE o.order_id = ol.order_id(+)
-  AND o.order_id = u.order_id(+)
-  AND TRUNC(o.order_time, 'mm') < TO_DATE('01/09/2023', 'dd/mm/yyyy')
-  AND o.expire_time >= TO_DATE('01/08/2023', 'dd/mm/yyyy')) where order_id = 2182;--44k
+                 END               expired_value,
+             CASE
+                 WHEN o.order_time >= TO_DATE('01/08/2023', 'dd/mm/yyyy')
+                     THEN
+                     NVL(o.contract_value, 0)
+                 ELSE
+                     NVL(ol.remain_value, 0)
+                 END
+                 - NVL(u.amount_used, 0)
+                 - CASE
+                       WHEN o.expire_time < TO_DATE('01/09/2023', 'dd/mm/yyyy') THEN NVL(o.remain_value, 0)
+                       ELSE 0
+                 END               remain_value,
+             TO_DATE('01/08/2023', 'dd/mm/yyyy')
+      FROM dsp_order o,
+           (SELECT *
+            FROM rpt_order_summary
+            WHERE sum_date = ADD_MONTHS(TO_DATE('01/08/2023', 'dd/mm/yyyy'), -1)) ol,
+           (SELECT order_id, SUM(amount_used) amount_used
+            FROM (SELECT order_id,
+                         SUM(NVL(DECODE(t.service_id, 50, ot.success_amount, 78, ot.success_amount, ot.amount),
+                                 0)) amount_used
+                  FROM dsp_order_transaction ot,
+                       dsp_transaction t
+                  WHERE ot.transaction_id = t.transaction_id
+                    AND t.status IN (6, 3)
+                    AND ot.issue_time >= TO_DATE('01/08/2023', 'dd/mm/yyyy')
+                    AND ot.issue_time < TO_DATE('01/09/2023', 'dd/mm/yyyy')
+                  GROUP BY ot.order_id
+                  UNION ALL
+                  SELECT TO_NUMBER(order_id) order_id, SUM(req_cost) amount_used
+                  FROM dsp_dd_history
+                  WHERE channel IN ('API_DDP', 'API_DD')
+                    AND status = 1
+                    AND request_time >= TO_DATE('01/08/2023', 'dd/mm/yyyy')
+                    AND request_time < TO_DATE('01/09/2023', 'dd/mm/yyyy')
+                  GROUP BY order_id)
+            GROUP BY order_id) u
+      WHERE o.order_id = ol.order_id(+)
+        AND o.order_id = u.order_id(+)
+        AND TRUNC(o.order_time, 'mm') < TO_DATE('01/09/2023', 'dd/mm/yyyy')
+        AND o.expire_time >= TO_DATE('01/08/2023', 'dd/mm/yyyy'))
+WHERE order_id = 2182;--44k
 
 
 SELECT *
 FROM dsp_sys_log
 WHERE exec_datetime > TO_DATE('01/03/2023', 'dd/mm/yyyy')
   AND exec_datetime < TO_DATE('01/08/2023', 'dd/mm/yyyy')
-and trans_id in ('3141',
-'3142',
-'3143',
-'3144',
-'3145',
-'3146',
-'3147',
-'3150'
-);
-  --AND request LIKE '%TleiYTtb6NpLT0UEcvOgXwfl+Yc=%';
+  AND trans_id IN ('3141',
+                   '3142',
+                   '3143',
+                   '3144',
+                   '3145',
+                   '3146',
+                   '3147',
+                   '3150'
+    );
+--AND request LIKE '%TleiYTtb6NpLT0UEcvOgXwfl+Yc=%';
 SELECT *
-FROM dsp_order where order_id='2182';--100k--44k--1k
+FROM dsp_order
+WHERE order_id = '2182';--100k--44k--1k
 SELECT *
-FROM dsp_transaction where status =3 and request_time>TO_DATE('01/08/2023', 'dd/mm/yyyy');--3633-1k
+FROM dsp_transaction
+WHERE status = 3
+  AND request_time > TO_DATE('01/08/2023', 'dd/mm/yyyy');--3633-1k
 
 SELECT *
-FROM dsp_order_transaction WHERE  transaction_id='3633';--2182
-
-
-SELECT *
-FROM dsp_order where order_id in (2381,2383);
-
-update dsp_order set status = 4, description ='Hoang Anh y/c ngay 31/08' where order_id in (2381,2383);
-
-COMMIT ;
+FROM dsp_order_transaction
+WHERE transaction_id = '3633';--2182
 
 
 SELECT *
-FROM dsp_order_status  where order_id in (2381,2383) ORDER BY issue_time;
+FROM dsp_order
+WHERE order_id IN (2381, 2383);
 
+UPDATE dsp_order
+SET status      = 4,
+    description ='Hoang Anh y/c ngay 31/08'
+WHERE order_id IN (2381, 2383);
 
-
-
-select * from dsp_transaction where service_id = 77 and request_time >= to_date('01/08/2023','dd/mm/yyyy')
-    and request_time < to_date('31/08/2023','dd/mm/yyyy')+1 and status = 4;
-
-SELECT *
-FROM api_request where request like 'W2GCheckRequest%' and req_time >= to_date('01/08/2023','dd/mm/yyyy') and req_time < to_date('31/08/2023','dd/mm/yyyy')+1
-and response like '%code=0%';
+COMMIT;
 
 
 SELECT *
-FROM m;
+FROM dsp_order_status
+WHERE order_id IN (2381, 2383)
+ORDER BY issue_time;
+
+
+
+SELECT *
+FROM dsp_transaction
+WHERE service_id = 77
+  AND request_time >= TO_DATE('01/08/2023', 'dd/mm/yyyy')
+  AND request_time < TO_DATE('31/08/2023', 'dd/mm/yyyy') + 1
+  AND status = 4;
+
+SELECT *
+FROM api_request
+WHERE req_time >= TO_DATE('01/06/2023', 'dd/mm/yyyy')
+  AND req_time < TO_DATE('02/06/2023', 'dd/mm/yyyy') + 1;
+
+
+SELECT *
+FROM dsp_transaction
+WHERE transaction_id IN (3821, 3822);
+
+SELECT *
+FROM dsp_sys_log
+WHERE exec_datetime >= TRUNC(SYSDATE)
+  AND request_id = '3821';
+
+SELECT *
+FROM am_user;
+
+SELECT *
+FROM dsp_pcrf_srv_config;
+
+SELECT *
+FROM dsp_sys_log
+WHERE exec_datetime > TO_DATE('02/06/2023', 'dd/mm/yyyy')
+  AND exec_datetime < TO_DATE('02/06/2023', 'dd/mm/yyyy') + 1
+  AND request LIKE '%120000010883788%';
+
+SELECT *
+FROM ap_param;
+
+SELECT *
+FROM dsp_transaction
+WHERE transaction_id = 3443;
