@@ -1,5 +1,14 @@
 /*20231108*/
 INSERT INTO api VALUES ('50','Nap TopUp','/nap_top_up','Cộng dịch vụ DATA/VASP profile bằng API','1');
+
+INSERT INTO dsp_sms_command
+VALUES (dsp_sms_command_seq.nextval, 'DK_CB_2_F6', 'O',
+        'Không đúng thông tin gói cước được đăng ký {0}. Chi tiết liên hệ 9090.',
+        0, 'KH nhắn tin đúng cú pháp, nhưng sai goi cuoc check tu BigData', NULL, '1', '1');
+INSERT INTO dsp_sms_command
+VALUES (dsp_sms_command_seq.nextval, 'DK_CB_2_F5', 'O',
+        'Không thỏa mãn điều kiện đăng ký gói. Chi tiết liên hệ 9090.',
+        0, 'KH nhắn tin đúng cú pháp, nhưng sai goi cuoc check tu BigData', NULL, '1', '1');
 COMMIT ;
 /*DROP TABLE shop;
 DROP TABLE company;*/
