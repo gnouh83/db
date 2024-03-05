@@ -1,3 +1,5 @@
+/*20240305*/
+    ALTER TABLE sub_service_history add order_id number(15);
 /*20231108*/
 INSERT INTO api VALUES ('50','Nap TopUp','/nap_top_up','Cộng dịch vụ DATA/VASP profile bằng API','1');
 
