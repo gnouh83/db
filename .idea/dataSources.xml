@@ -174,5 +174,13 @@
       <jdbc-url>jdbc:oracle:thin:@//10.11.10.154:1521/cbs</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="qlpn@10.10.8.181" uuid="33188059-f86b-4c3b-bd67-d38595eac6bd">
+      <driver-ref>oracle</driver-ref>
+      <synchronize>true</synchronize>
+      <auto-commit>false</auto-commit>
+      <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
+      <jdbc-url>jdbc:oracle:thin:@10.10.8.181:1521:tc8</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

@@ -1,7 +1,32 @@
 /*20240305*/
-    ALTER TABLE sub_service_history add order_id number(15);
+ALTER TABLE sub_service
+    ADD order_id number(15);
+ALTER TABLE sub_service_history
+    ADD order_id number(15);
+ALTER TABLE api_request
+    ADD trans_id varchar2(200);
+ALTER TABLE api_request
+    ADD client_id varchar2(200);
+
+INSERT INTO dsp_sms_command (cmd_id, cmd_code, cmd_type, cmd_msg_content, cmd_param_count, description, cmd_regex,
+                             status, sys_type)
+VALUES (dsp_sms_command_seq.nextval, 'DK_MTOPUP', 'I', NULL, 3, 'Nạp thẻ TOPUP theo dòng tiền', 'MNAP [a-zA-Z0-9_]+ (0)?\d{9}', '1', '1');
+INSERT INTO dsp_sms_command (cmd_id, cmd_code, cmd_type, cmd_msg_content, cmd_param_count, description, cmd_regex,
+                             status, sys_type)
+VALUES (dsp_sms_command_seq.nextval, 'DK_MTOPUP_F1', 'O', 'Tài khoản tiền của quý khách không còn đủ để thanh toán gói {0}.', 0,
+        'Tài khoản tiền của quý khách không còn đủ để thanh toán.', NULL, '1', '1');
+INSERT INTO dsp_sms_command (cmd_id, cmd_code, cmd_type, cmd_msg_content, cmd_param_count, description, cmd_regex,
+                             status, sys_type)
+VALUES (dsp_sms_command_seq.nextval, 'DK_MTOPUP_F2', 'O', 'Hệ thống không tìm thấy thông tin gói {0}.', 0,
+        'Hệ thống không tìm thấy thông tin gói cước.', NULL, '1', '1');
+INSERT INTO dsp_sms_command (cmd_id, cmd_code, cmd_type, cmd_msg_content, cmd_param_count, description, cmd_regex,
+                             status, sys_type)
+VALUES (dsp_sms_command_seq.nextval, 'DK_MTOPUP_OK', 'O', 'Gói {0} được nạp thành công cho thuê bao {1}.', 0,
+        'Nạp thành công gói cước cho thuê bao. Nhắn tin cho số thuê bao bán hàng.', NULL, '1', '1');
+
 /*20231108*/
-INSERT INTO api VALUES ('50','Nap TopUp','/nap_top_up','Cộng dịch vụ DATA/VASP profile bằng API','1');
+INSERT INTO api
+VALUES ('50', 'Nap TopUp', '/nap_top_up', 'Cộng dịch vụ DATA/VASP profile bằng API', '1');
 
 INSERT INTO dsp_sms_command
 VALUES (dsp_sms_command_seq.nextval, 'DK_CB_2_F6', 'O',
@@ -11,7 +36,7 @@ INSERT INTO dsp_sms_command
 VALUES (dsp_sms_command_seq.nextval, 'DK_CB_2_F5', 'O',
         'Không thỏa mãn điều kiện đăng ký gói. Chi tiết liên hệ 9090.',
         0, 'KH nhắn tin đúng cú pháp, nhưng sai goi cuoc check tu BigData', NULL, '1', '1');
-COMMIT ;
+COMMIT;
 /*DROP TABLE shop;
 DROP TABLE company;*/
 GRANT SELECT ON dsp_sub_service TO icccds_owner;
@@ -522,7 +547,8 @@ CREATE SEQUENCE icccds_owner.mbf30_file_seq
     NOCACHE
 /
 
-ALTER TABLE orders ADD file_id_list varchar2(500);
+ALTER TABLE orders
+    ADD file_id_list varchar2(500);
 
 CREATE TABLE mbf30_file
 (
