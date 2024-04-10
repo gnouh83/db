@@ -1,3 +1,14 @@
+/*Tong hop du lieu DC ket xuat lam bao cao*/
+SELECT b.use_tim, a.order_code, b.profile_code, b.count_used
+FROM voucher_order a,
+     (SELECT TRUNC(use_tim) use_tim, order_id, profile_code, COUNT(*) count_used
+      FROM voucher
+      WHERE /*use_tim >= TRUNC(SYSDATE - 1)
+  AND use_tim < TRUNC(SYSDATE)*/
+          use_tim >= TO_DATE('2023-05-22', 'yyyy-mm-dd')
+        AND use_tim < TO_DATE('2023-05-22', 'yyyy-mm-dd') + 1
+      GROUP BY TRUNC(use_tim), order_id, profile_code) b
+WHERE a.order_id = b.order_id;
 /*20240305*/
 ALTER TABLE sub_service
     ADD order_id number(15);
@@ -10,10 +21,12 @@ ALTER TABLE api_request
 
 INSERT INTO dsp_sms_command (cmd_id, cmd_code, cmd_type, cmd_msg_content, cmd_param_count, description, cmd_regex,
                              status, sys_type)
-VALUES (dsp_sms_command_seq.nextval, 'DK_MTOPUP', 'I', NULL, 3, 'Nạp thẻ TOPUP theo dòng tiền', 'MNAP [a-zA-Z0-9_]+ (0)?\d{9}', '1', '1');
+VALUES (dsp_sms_command_seq.nextval, 'DK_MTOPUP', 'I', NULL, 3, 'Nạp thẻ TOPUP theo dòng tiền',
+        'MNAP [a-zA-Z0-9_]+ (0)?\d{9}', '1', '1');
 INSERT INTO dsp_sms_command (cmd_id, cmd_code, cmd_type, cmd_msg_content, cmd_param_count, description, cmd_regex,
                              status, sys_type)
-VALUES (dsp_sms_command_seq.nextval, 'DK_MTOPUP_F1', 'O', 'Tài khoản tiền của quý khách không còn đủ để thanh toán gói {0}.', 0,
+VALUES (dsp_sms_command_seq.nextval, 'DK_MTOPUP_F1', 'O',
+        'Tài khoản tiền của quý khách không còn đủ để thanh toán gói {0}.', 0,
         'Tài khoản tiền của quý khách không còn đủ để thanh toán.', NULL, '1', '1');
 INSERT INTO dsp_sms_command (cmd_id, cmd_code, cmd_type, cmd_msg_content, cmd_param_count, description, cmd_regex,
                              status, sys_type)
