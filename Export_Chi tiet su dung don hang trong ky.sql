@@ -26,7 +26,7 @@ FROM (SELECT (SELECT com_name FROM dsp_company WHERE com_id = dt.top_id) ctkv,
              p.price * (o.total - o.used)                                tot_start,
              NVL((SELECT not_yet
                   FROM rpt_dc_order_summary
-                  WHERE sum_dat = TRUNC(ADD_MONTHS(SYSDATE, -3), 'MM')
+                  WHERE sum_dat = TRUNC(ADD_MONTHS(SYSDATE, -2), 'MM')
                     AND order_id = o.order_id
                     AND profile_code = o.profile_code), 0)               not_yet_ton,
              0                                                           taomoi
