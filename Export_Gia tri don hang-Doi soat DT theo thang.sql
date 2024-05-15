@@ -5,7 +5,8 @@ SELECT TO_CHAR(TRUNC(ADD_MONTHS(SYSDATE, -1), 'MM'), 'mm/yyyy') thang,
        o.order_id,
        (SELECT (1 - paid_cost / contract_value) * 100
         FROM dsp_order
-        WHERE order_id = o.order_id)                            tyle_ck,
+        WHERE order_id = o.order_id
+          AND status IN (2, 3))                                 tyle_ck,
        NVL((SELECT remain_value
             FROM rpt_order_summary
             WHERE sum_date = TRUNC(ADD_MONTHS(SYSDATE, -2), 'MM')
