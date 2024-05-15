@@ -59,6 +59,36 @@ CREATE TABLE voucher_order
     PARTITION "DATA-20240531" VALUES LESS THAN (TO_DATE(' 2024-06-01 00:00:00', 'SYYYY-MM-DD HH24:MI:SS', 'NLS_CALENDAR=GREGORIAN'))
 );
 
+
+CREATE TABLE "DR_FILE"
+   (	"FILE_ID" NUMBER(10,0),
+	"FILE_NAME" VARCHAR2(200 BYTE),
+	"FILE_MODIFIED" DATE,
+	"FILE_SIZE" NUMBER(10,0),
+	"FILE_TYPE" VARCHAR2(10 BYTE),
+	"TOTAL_RECORD" NUMBER(10,0),
+	"PROCESSED_RECORD" NUMBER(10,0),
+	"PROCESSED_TIME" DATE,
+	"DATA_BEGIN_TIME" DATE,
+	"DATA_END_TIME" DATE,
+	"STATUS" NUMBER(2,0)
+   ) ;
+--------------------------------------------------------
+--  DDL for Index DR_FILE_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "DR_FILE_PK" ON "DR_FILE" ("FILE_ID");
+--------------------------------------------------------
+--  Constraints for Table DR_FILE
+--------------------------------------------------------
+
+  ALTER TABLE "DR_FILE" ADD CONSTRAINT "DR_FILE_PK" PRIMARY KEY ("FILE_ID")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
+  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "DATA"  ENABLE;
+  ALTER TABLE "DR_FILE" MODIFY ("FILE_ID" NOT NULL ENABLE);
 --3. Ket xuat du lieu
 SELECT SUBSTR(a.description, INSTR(a.description, '->', -1, 1) + 2) isdn,
        c.profile_code                                               ma_goi,
