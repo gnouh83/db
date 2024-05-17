@@ -45,7 +45,7 @@ FROM (SELECT (SELECT com_name FROM dsp_company WHERE com_id = dt.top_id) ctkv,
         AND o.order_id IN (SELECT DISTINCT order_id
                            FROM rpt_dc_order_summary
                            WHERE sum_dat = TRUNC(ADD_MONTHS(SYSDATE, -1), 'MM')
-                             AND (expired_in_period > 0 OR used_in_period > 0))
+                             AND (expired_in_period > 0 OR used_in_period > 0  OR not_yet > 0))
       UNION ALL
       SELECT c.com_name         ctkv,
              dt.com_id          ma_dn,
