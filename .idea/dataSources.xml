@@ -69,14 +69,6 @@
       <jdbc-url>jdbc:oracle:thin:@10.11.10.12:1521:app</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="wallet_loyal@10.11.10.12" uuid="13e7d666-1d03-4670-b055-e38f4bac3195">
-      <driver-ref>oracle.19</driver-ref>
-      <synchronize>true</synchronize>
-      <auto-commit>false</auto-commit>
-      <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
-      <jdbc-url>jdbc:oracle:thin:@10.11.10.12:1521:app</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
     <data-source source="LOCAL" name="MBF_ICCCDS" uuid="811dd6ab-2099-453f-9bec-79ca60a2cc3d">
       <driver-ref>oracle.19</driver-ref>
       <synchronize>true</synchronize>
@@ -158,6 +150,41 @@
       <auto-commit>false</auto-commit>
       <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
       <jdbc-url>jdbc:oracle:thin:@//10.11.10.154:1521/cbs</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="thrm_owner_test@10.11.10.12" group="HRM" uuid="42b4ebf6-6b42-4759-a066-1b4c18380de6">
+      <driver-ref>oracle.19</driver-ref>
+      <synchronize>true</synchronize>
+      <auto-commit>false</auto-commit>
+      <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
+      <jdbc-url>jdbc:oracle:thin:@10.11.10.12:1521:app</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="thrm_owner_test@10.11.10.7" uuid="087e7f2c-41bf-4339-9391-50cabd577e7b">
+      <driver-ref>oracle.19</driver-ref>
+      <synchronize>true</synchronize>
+      <auto-commit>false</auto-commit>
+      <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
+      <jdbc-url>jdbc:oracle:thin:@10.11.10.7:1521:hrm</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="hrm_admin_test@10.11.10.12" group="HRM" uuid="803ab740-b038-4086-b878-737499cb2e57">
+      <driver-ref>oracle.19</driver-ref>
+      <synchronize>true</synchronize>
+      <auto-commit>false</auto-commit>
+      <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
+      <jdbc-url>jdbc:oracle:thin:@10.11.10.12:1521:app</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="telsoft_hrm_test@10.11.10.12" group="HRM" uuid="2ec7b006-5f19-4b7d-926c-1de9a6a2fbac">
+      <driver-ref>oracle.19</driver-ref>
+      <synchronize>true</synchronize>
+      <auto-commit>false</auto-commit>
+      <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
+      <jdbc-url>jdbc:oracle:thin:@10.11.10.12:1521:app</jdbc-url>
+      <jdbc-additional-properties>
+        <property name="dbms_output" value="true" />
+      </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
