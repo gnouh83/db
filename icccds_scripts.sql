@@ -1,3 +1,9 @@
+/*2024-10-30 ghi log thoi gian thuc hien lenh*/
+ALTER TABLE sys_log
+    ADD (
+        req_timestamp timestamp,
+        res_timestamp timestamp
+        );
 /*Tong hop du lieu DC ket xuat lam bao cao*/
 SELECT b.use_tim, a.order_code, b.profile_code, b.count_used
 FROM voucher_order a,
