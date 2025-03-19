@@ -1,3 +1,26 @@
+/*2025-02-19 Trien khai NDS*/
+
+
+CREATE SEQUENCE dest_sys_cmd_cfg_seq MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER NOCYCLE;
+CREATE TABLE dest_sys_cmd_cfg
+(
+    id            NUMBER        NOT NULL ENABLE,
+    dest_system   VARCHAR2(1)   NOT NULL ENABLE,
+    command_type  VARCHAR2(2)   NOT NULL ENABLE,
+    pin_prefix    VARCHAR2(5)   NOT NULL ENABLE,
+    profile_code  VARCHAR2(20)  NOT NULL ENABLE,
+    service_code  VARCHAR2(50)  NOT NULL ENABLE,
+    command_code  VARCHAR2(100) NOT NULL ENABLE,
+    package_code  VARCHAR2(100) NOT NULL ENABLE,
+    source_code   VARCHAR2(50)  NOT NULL ENABLE,
+    success_value VARCHAR2(100) NOT NULL ENABLE,
+    mt_dk_ok      VARCHAR2(100),
+    CONSTRAINT dest_sys_cmd_cfg_pk PRIMARY KEY (id),
+    CONSTRAINT dest_sys_cmd_cfg_uk_1 UNIQUE (dest_system, command_type, command_code, package_code)/*,
+    CONSTRAINT dest_sys_cmd_cfg_uk_2 UNIQUE (dest_system, command_type, pin_prefix),
+    CONSTRAINT dest_sys_cmd_cfg_uk_3 UNIQUE (dest_system, command_type, profile_code)*/
+)
+    TABLESPACE data;
 /*2024-10-30 ghi log thoi gian thuc hien lenh*/
 ALTER TABLE sys_log
     ADD (
